@@ -1,11 +1,25 @@
 import styled from "@emotion/styled";
+import { query, collection, getDocs } from "firebase/firestore";
+import { db } from "../firebase/config";
+import { useState, useEffect } from "react";
 
 export function Feed() {
+  const [photos, setPhotos] = useState<string[]>([]);
+
+  useEffect(() => {
+    (async () => {
+      const q = query(collection(db, "photos"));
+      const docs = await getDocs(q);
+      const p = docs.docs.map((doc) => doc.data().image) as string[];
+      setPhotos(p);
+    })();
+  }, []);
+
   return (
     <FeedContainer>
-      <Img src="https://images.unsplash.com/photo-1667481018546-278f7d97c0c8?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80" />
-      <Img src="https://images.unsplash.com/photo-1667481018546-278f7d97c0c8?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80" />
-      <Img src="https://images.unsplash.com/photo-1667481018546-278f7d97c0c8?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80" />
+      {photos.map((photo, key) => (
+        <Img src={photo} alt="moi" key={key} />
+      ))}
     </FeedContainer>
   );
 }

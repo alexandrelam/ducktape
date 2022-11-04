@@ -4,6 +4,7 @@ import { Navbar } from "../components/Navbar";
 import { useState } from "react";
 import { Feed } from "../components/Feed";
 import { Settings } from "../components/Settings";
+import { Camera } from "../components/Camera";
 
 export default function Home() {
   const [page, setPage] = useState(1);
@@ -12,6 +13,7 @@ export default function Home() {
     <ProtectedRoute>
       <Wrapper>
         <Container>
+          {page === 0 && <Camera />}
           {page === 1 && <Feed />}
           {page == 2 && <Settings />}
         </Container>
