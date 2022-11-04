@@ -1,12 +1,10 @@
 import Button from "@mui/material/Button";
 import styled from "@emotion/styled";
 import { useRouter } from "next/router";
-import { useSignInWithGoogle } from "react-firebase-hooks/auth";
-import { auth } from "../firebase/config";
+import { signInWithGoogle } from "../firebase/config";
 
 export default function login() {
   const router = useRouter();
-  const [signInWithGoogle] = useSignInWithGoogle(auth);
 
   async function handleLogin() {
     await signInWithGoogle();

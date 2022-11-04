@@ -46,8 +46,8 @@ const signInWithGoogle = async () => {
       await addDoc(collection(db, "users"), {
         uid: user.uid,
         name: user.displayName,
-        authProvider: "google",
         email: user.email,
+        photoURL: user.photoURL,
       });
     }
   } catch (err: any) {
@@ -60,4 +60,4 @@ const logout = () => {
   signOut(auth);
 };
 
-export { auth, db, logout };
+export { auth, signInWithGoogle, db, logout };

@@ -7,19 +7,31 @@ import { auth } from "../firebase/config";
 
 export function Settings() {
   const router = useRouter();
-  const [user] = useAuthState(auth);
+  const [user, error] = useAuthState(auth);
 
   function handleLogout() {
     logout();
     router.push("/login");
   }
 
+  if (error)
+    return (
+      <div>Une erreur est surevenue lors du chargement de l'utilisateur</div>
+    );
+
+  if (!user) return <div>Loading...</div>;
+
   return (
     <Container>
-      <span>{user?.email}</span>
-      <Button color="error" onClick={handleLogout}>
+      <ProfileWrapper>
+        {user.photoURL ? (
+          <ProfilePicture src={user.photoURL} alt="profile picture" />
+        ) : null}
+        <span>{user.displayName}</span>
+      </ProfileWrapper>
+      <DisconnectButton color="error" onClick={handleLogout}>
         Se déconnecter
-      </Button>
+      </DisconnectButton>
     </Container>
   );
 }
@@ -28,5 +40,25 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: end;
-  height: 100%;
+  height: 90vh;
+`;
+
+const DisconnectButton = styled(Button)`
+  margin-top: auto;
+`;
+
+const ProfileWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  margin-top: 4rem;
+  gap: 4px;
+`;
+
+const ProfilePicture = styled.img`
+  border-radius: 100%;
+  width: 6rem;
+  height: 6rem;
 `;
