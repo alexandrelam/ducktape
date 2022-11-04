@@ -7,6 +7,7 @@ import FlipCameraAndroidIcon from "@mui/icons-material/FlipCameraAndroid";
 import CancelIcon from "@mui/icons-material/Cancel";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
 import { useCamera } from "../hooks/useCamera";
+import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
 
 export function Camera() {
   const {
@@ -71,6 +72,16 @@ export function Camera() {
               onClick={handleStartCaptureClick}
             >
               <PhotoCamera />
+            </StyledButton>
+          ) : null}
+          {capturing ? (
+            <StyledButton
+              variant="contained"
+              component="label"
+              color="error"
+              onClick={handleStartCaptureClick}
+            >
+              <FiberManualRecordIcon />
             </StyledButton>
           ) : null}
           {recordedChunks.length > 0 && (
