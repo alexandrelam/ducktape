@@ -57,11 +57,16 @@ export const useCamera = () => {
     }
   }, [recordedChunks]);
 
+  const handleCancel = useCallback(() => {
+    setRecordedChunks([]);
+  }, [setRecordedChunks]);
+
   return {
     webcamRef,
     capturing,
     recordedChunks,
     handleStartCaptureClick,
     handleUpload,
+    handleCancel,
   };
 };

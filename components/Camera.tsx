@@ -4,10 +4,20 @@ import Webcam from "react-webcam";
 import Button from "@mui/material/Button";
 import PhotoCamera from "@mui/icons-material/PhotoCamera";
 import FlipCameraAndroidIcon from "@mui/icons-material/FlipCameraAndroid";
+import CancelIcon from "@mui/icons-material/Cancel";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
 import { useCamera } from "../hooks/useCamera";
 
 export function Camera() {
+  const {
+    webcamRef,
+    capturing,
+    recordedChunks,
+    handleStartCaptureClick,
+    handleUpload,
+    handleCancel,
+  } = useCamera();
+
   const [isFrontCamera, setIsFrontCamera] = useState(true);
 
   const videoConstraints = {
@@ -16,16 +26,14 @@ export function Camera() {
     facingMode: isFrontCamera ? "user" : { exact: "environment" },
   };
 
-  const {
-    webcamRef,
-    capturing,
-    recordedChunks,
-    handleStartCaptureClick,
-    handleUpload,
-  } = useCamera();
-
   function flipCamera() {
     setIsFrontCamera(!isFrontCamera);
+  }
+
+  function getVideoUrl() {
+    return URL.createObjectURL(
+      new Blob(recordedChunks, { type: "video/webm" })
+    );
   }
 
   return (
@@ -34,15 +42,29 @@ export function Camera() {
         <FlipCameraButton variant="contained" onClick={flipCamera}>
           <FlipCameraAndroidIcon />
         </FlipCameraButton>
-        <Webcam
-          audio={false}
-          ref={webcamRef}
-          screenshotFormat="image/jpeg"
-          videoConstraints={videoConstraints}
-          mirrored={isFrontCamera}
-        />
+        {!capturing && recordedChunks.length > 0 ? (
+          <video src={getVideoUrl()} autoPlay loop />
+        ) : (
+          <Webcam
+            audio={false}
+            ref={webcamRef}
+            screenshotFormat="image/jpeg"
+            videoConstraints={videoConstraints}
+            mirrored={isFrontCamera}
+          />
+        )}
         <ButtonWrapper>
-          {capturing ? null : (
+          {!capturing && recordedChunks.length > 0 ? (
+            <StyledButton
+              variant="contained"
+              color="error"
+              component="label"
+              onClick={handleCancel}
+            >
+              <CancelIcon />
+            </StyledButton>
+          ) : null}
+          {!capturing && recordedChunks.length === 0 ? (
             <StyledButton
               variant="contained"
               component="label"
@@ -50,7 +72,7 @@ export function Camera() {
             >
               <PhotoCamera />
             </StyledButton>
-          )}
+          ) : null}
           {recordedChunks.length > 0 && (
             <Button
               onClick={handleUpload}
