@@ -1,24 +1,34 @@
-import styled from "@emotion/styled";
-import { query, collection, getDocs } from "firebase/firestore";
-import { db } from "../firebase/config";
 import { useState, useEffect } from "react";
+import styled from "@emotion/styled";
+import { getDownloadURL, getStorage, ref, listAll } from "firebase/storage";
 
 export function Feed() {
-  const [photos, setPhotos] = useState<string[]>([]);
+  const [videos, setVideos] = useState<string[]>([]);
+
+  const storage = getStorage();
+  const listRef = ref(storage);
 
   useEffect(() => {
+    // Find all the prefixes and items.
     (async () => {
-      const q = query(collection(db, "photos"));
-      const docs = await getDocs(q);
-      const p = docs.docs.map((doc) => doc.data().image) as string[];
-      setPhotos(p);
+      const v: string[] = [];
+      const res = await listAll(listRef);
+      await Promise.all(
+        res.items.map(async (itemRef) => {
+          const url = await getDownloadURL(itemRef);
+          v.push(url);
+        })
+      );
+      setVideos(v);
     })();
   }, []);
 
   return (
     <FeedContainer>
-      {photos.map((photo, key) => (
-        <Img src={photo} alt="moi" key={key} />
+      {videos.map((video, key) => (
+        <video autoPlay muted loop key={key}>
+          <source src={video} type="video/webm" />
+        </video>
       ))}
     </FeedContainer>
   );

@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import styled from "@emotion/styled";
 import ProtectedRoute from "../layouts/ProtectedRoute";
 import { Navbar } from "../components/Navbar";
