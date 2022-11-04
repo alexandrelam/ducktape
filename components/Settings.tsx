@@ -40,7 +40,7 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: end;
-  height: 90vh;
+  height: 80vh;
 `;
 
 const DisconnectButton = styled(Button)`
