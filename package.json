@@ -1,7 +1,11 @@
 {
-  "name": "oui",
+  "name": "flashduck",
   "version": "0.1.0",
   "private": true,
+  "author": {
+    "name": "Alexandre Lam",
+    "email": "alexandrelam@outlook.com"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -18,3 +22,4 @@
     "typescript": "4.8.4"
   }
 }
+
