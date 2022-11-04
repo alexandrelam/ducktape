@@ -4,6 +4,7 @@ import { logout } from "../firebase/config";
 import { useRouter } from "next/router";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../firebase/config";
+import { UserUid } from "./UserUid";
 
 export function Settings() {
   const router = useRouter();
@@ -29,9 +30,11 @@ export function Settings() {
         ) : null}
         <span>{user.displayName}</span>
       </ProfileWrapper>
-      <DisconnectButton color="error" onClick={handleLogout}>
+      <Button color="error" onClick={handleLogout}>
         Se déconnecter
-      </DisconnectButton>
+      </Button>
+      <UserUid />
+      <h2>Amis</h2>
     </Container>
   );
 }
@@ -40,11 +43,7 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: end;
-  height: 80vh;
-`;
-
-const DisconnectButton = styled(Button)`
-  margin-top: auto;
+  padding: 0 1.5rem;
 `;
 
 const ProfileWrapper = styled.div`
