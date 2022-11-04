@@ -28,7 +28,6 @@ export default function Home() {
 
 const Container = styled.div`
   flex-grow: 1;
-  overflow-y: scroll;
   margin-bottom: 56px;
 `;
 

@@ -1,8 +1,11 @@
+import styled from "@emotion/styled";
 import Webcam from "react-webcam";
 import { useState, useRef, useCallback } from "react";
-import { collection, addDoc } from "firebase/firestore";
-import { db } from "../firebase/config";
 import { getStorage, ref, uploadBytes } from "firebase/storage";
+import Button from "@mui/material/Button";
+import PhotoCamera from "@mui/icons-material/PhotoCamera";
+import FileUploadIcon from "@mui/icons-material/FileUpload";
+import CancelIcon from "@mui/icons-material/Cancel";
 
 const videoConstraints = {
   width: 1280,
@@ -46,51 +49,70 @@ export function Camera() {
     setCapturing(false);
   }, [mediaRecorderRef, webcamRef, setCapturing]);
 
-  const handleDownload = useCallback(async () => {
+  const handleUpload = useCallback(async () => {
     if (recordedChunks.length) {
       const blob = new Blob(recordedChunks, {
         type: "video/webm",
       });
-      const url = URL.createObjectURL(blob);
 
       try {
         const storage = getStorage();
         const storageRef = ref(storage, `${new Date().toISOString()}`);
 
         // 'file' comes from the Blob or File API
-        uploadBytes(storageRef, blob);
+        await uploadBytes(storageRef, blob);
+        setRecordedChunks([]);
       } catch (e) {
         console.log(e);
       }
-
-      const a = document.createElement("a");
-      document.body.appendChild(a);
-      // @ts-ignore
-      a.style = "display: none";
-      a.href = url;
-      a.download = "react-webcam-stream-capture.webm";
-      a.click();
-      window.URL.revokeObjectURL(url);
-      setRecordedChunks([]);
     }
   }, [recordedChunks]);
   return (
     <>
-      <Webcam
-        audio={false}
-        ref={webcamRef}
-        screenshotFormat="image/jpeg"
-        videoConstraints={videoConstraints}
-        mirrored={true}
-      />
-      {capturing ? (
-        <button onClick={handleStopCaptureClick}>Stop Capture</button>
-      ) : (
-        <button onClick={handleStartCaptureClick}>Start Capture</button>
-      )}
-      {recordedChunks.length > 0 && (
-        <button onClick={handleDownload}>Download</button>
-      )}
+      <Wrapper>
+        <Webcam
+          audio={false}
+          ref={webcamRef}
+          screenshotFormat="image/jpeg"
+          videoConstraints={videoConstraints}
+          mirrored={true}
+        />
+        <div>
+          {capturing ? (
+            <Button
+              onClick={handleStopCaptureClick}
+              variant="contained"
+              component="label"
+            >
+              <CancelIcon />
+            </Button>
+          ) : (
+            <Button
+              variant="contained"
+              component="label"
+              onClick={handleStartCaptureClick}
+            >
+              <PhotoCamera />
+            </Button>
+          )}
+          {recordedChunks.length > 0 && (
+            <Button
+              onClick={handleUpload}
+              variant="contained"
+              component="label"
+            >
+              <FileUploadIcon />
+            </Button>
+          )}
+        </div>
+      </Wrapper>
     </>
   );
 }
+
+const Wrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;

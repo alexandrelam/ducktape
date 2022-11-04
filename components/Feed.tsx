@@ -23,12 +23,16 @@ export function Feed() {
     })();
   }, []);
 
+  if (!videos.length) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <FeedContainer>
       {videos.map((video, key) => (
-        <video autoPlay muted loop key={key}>
+        <Video autoPlay muted loop key={key}>
           <source src={video} type="video/webm" />
-        </video>
+        </Video>
       ))}
     </FeedContainer>
   );
@@ -38,8 +42,10 @@ const FeedContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  max-width: 666px;
+  margin: auto;
 `;
 
-const Img = styled.img`
-  width: 99vw;
+const Video = styled.video`
+  width: 100%;
 `;
