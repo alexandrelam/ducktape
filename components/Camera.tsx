@@ -112,7 +112,7 @@ const Wrapper = styled.div`
 const ButtonWrapper = styled.div`
   display: flex;
   width: 100vw;
-  position: absolute;
+  position: fixed;
   bottom: 30px;
 `;
 
