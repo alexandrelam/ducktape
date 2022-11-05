@@ -18,7 +18,11 @@ const Alert = forwardRef<HTMLDivElement, AlertProps>(function Alert(
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
-export function AddFriend() {
+type Props = {
+  fetchFriends: () => Promise<void>;
+};
+
+export function AddFriend({ fetchFriends }: Props) {
   const [user] = useAuthState(auth);
   const [friendUid, setFriendUid] = useState<string>("");
   const [open, setOpen] = useState(false);
@@ -41,6 +45,7 @@ export function AddFriend() {
           throw new Error("Vous ne pouvez pas vous ajouter vous-même");
         await addFriend(user.uid, friendUid);
         await addFriend(friendUid, user.uid);
+        fetchFriends();
       } catch (e) {
         setOpen(true);
       }

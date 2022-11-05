@@ -4,23 +4,19 @@ import ListItemText from "@mui/material/ListItemText";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
 import IconButton from "@mui/material/IconButton";
 import Avatar from "@mui/material/Avatar";
-import { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth, db } from "../firebase/config";
-import { arrayRemove, doc, getDoc, updateDoc } from "firebase/firestore";
+import { arrayRemove, doc, updateDoc } from "firebase/firestore";
 import { User } from "../types/User";
 import DeleteIcon from "@mui/icons-material/Delete";
 
-export function FriendList() {
-  const [user] = useAuthState(auth);
-  const [friends, setFriends] = useState<User[]>([]);
+type Props = {
+  friends: User[];
+  fetchFriends: () => Promise<void>;
+};
 
-  useEffect(() => {
-    (async () => {
-      const userDoc = await getDoc(doc(db, "users", user!.uid));
-      setFriends(userDoc.data()?.friends);
-    })();
-  }, []);
+export function FriendList({ friends, fetchFriends }: Props) {
+  const [user] = useAuthState(auth);
 
   async function removeFriend(friend: User) {
     await updateDoc(doc(db, "users", user!.uid), {
@@ -35,9 +31,7 @@ export function FriendList() {
       }),
     });
 
-    const userDoc = await getDoc(doc(db, "users", user!.uid));
-    const friends = userDoc.data()?.friends;
-    setFriends(friends);
+    fetchFriends();
   }
 
   return (

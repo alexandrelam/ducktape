@@ -7,15 +7,29 @@ import { auth } from "../firebase/config";
 import { UserUid } from "./UserUid";
 import { AddFriend } from "./AddFriend";
 import { FriendList } from "./FriendList";
+import { useEffect, useState } from "react";
+import { User } from "../types/User";
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "../firebase/config";
 
 export function Settings() {
   const router = useRouter();
   const [user, error] = useAuthState(auth);
+  const [friends, setFriends] = useState<User[]>([]);
 
   function handleLogout() {
     logout();
     router.push("/login");
   }
+
+  async function fetchFriends() {
+    const userDoc = await getDoc(doc(db, "users", user!.uid));
+    setFriends(userDoc.data()?.friends);
+  }
+
+  useEffect(() => {
+    fetchFriends();
+  });
 
   if (error)
     return (
@@ -37,8 +51,8 @@ export function Settings() {
       </Button>
       <UserUid />
       <h2>Amis</h2>
-      <AddFriend />
-      <FriendList />
+      <AddFriend fetchFriends={fetchFriends} />
+      <FriendList friends={friends} fetchFriends={fetchFriends} />
     </Container>
   );
 }
