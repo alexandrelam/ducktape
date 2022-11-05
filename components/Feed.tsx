@@ -11,6 +11,7 @@ import { User } from "../types/User";
 export function Feed() {
   const [user] = useAuthState(auth);
   const [videos, setVideos] = useState<string[]>([]);
+  const [loading, setLoading] = useState(true);
 
   const storage = getStorage();
 
@@ -44,11 +45,20 @@ export function Feed() {
       );
 
       setVideos(v);
+      setLoading(false);
     })();
   }, []);
 
-  if (!videos.length) {
+  if (loading) {
     return <div>Loading...</div>;
+  }
+
+  if (videos.length === 0) {
+    return (
+      <div>
+        Vous n'avez pas encore de vidéos, créez une vidéo ou ajoutez des amis !
+      </div>
+    );
   }
 
   return (
