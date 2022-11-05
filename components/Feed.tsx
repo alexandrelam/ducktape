@@ -10,19 +10,19 @@ import { User } from "../types/User";
 
 export function Feed() {
   const [user] = useAuthState(auth);
-  const [videos, setVideos] = useState<string[]>([]);
+  const [videos, setVideos] = useState<Video[]>([]);
   const [loading, setLoading] = useState(true);
 
   const storage = getStorage();
 
   async function getVideosFromUser(userUid: string) {
-    const v: string[] = [];
+    const v: Video[] = [];
     const userDoc = await getDoc(doc(db, "users", userUid));
     const videos = userDoc.data()?.videos;
     await Promise.all(
       videos.map(async (video: Video) => {
         const url = await getDownloadURL(ref(storage, video.path));
-        v.push(url);
+        v.push({ ...video, url, author: userDoc.data()?.name || "" });
       })
     );
     return v;
@@ -31,7 +31,7 @@ export function Feed() {
   useEffect(() => {
     // Find all the prefixes and items.
     (async () => {
-      const v: string[] = [];
+      const v: Video[] = [];
       const userDoc = await getDoc(doc(db, "users", user!.uid));
       // add my videos
       v.push(...(await getVideosFromUser(user!.uid)));
@@ -64,9 +64,12 @@ export function Feed() {
   return (
     <FeedContainer>
       {videos.map((video, key) => (
-        <Video autoPlay muted loop key={key}>
-          <source src={video} type="video/webm" />
-        </Video>
+        <Overlay key={key}>
+          <OverlayText key={key}>{video.author}</OverlayText>
+          <Video autoPlay muted loop key={key}>
+            <source src={video.url} type="video/webm" />
+          </Video>
+        </Overlay>
       ))}
     </FeedContainer>
   );
@@ -82,4 +85,16 @@ const FeedContainer = styled.div`
 
 const Video = styled.video`
   width: 100%;
+`;
+
+const Overlay = styled.div`
+  position: relative;
+`;
+
+const OverlayText = styled.h2`
+  position: absolute;
+  color: white;
+  font-size: 2rem;
+  opacity: 0.5;
+  margin-left: 1rem;
 `;
