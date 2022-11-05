@@ -7,6 +7,8 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../firebase/config";
 import { Video } from "../types/Video";
 import { User } from "../types/User";
+import IconButton from "@mui/material/IconButton";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 export function Feed() {
   const [user] = useAuthState(auth);
@@ -22,7 +24,12 @@ export function Feed() {
     await Promise.all(
       videos.map(async (video: Video) => {
         const url = await getDownloadURL(ref(storage, video.path));
-        v.push({ ...video, url, author: userDoc.data()?.name || "" });
+        v.push({
+          ...video,
+          url,
+          author: userDoc.data()?.name || "",
+          authorUid: userDoc.id,
+        });
       })
     );
     return v;
@@ -64,9 +71,14 @@ export function Feed() {
   return (
     <FeedContainer>
       {videos.map((video, key) => (
-        <Overlay key={key}>
-          <OverlayText key={key}>{video.author}</OverlayText>
-          <Video autoPlay muted loop key={key}>
+        <Overlay key={`overlay-${key}`}>
+          <OverlayText key={`overlay-text-${key}`}>{video.author}</OverlayText>
+          {user?.uid === video.authorUid ? (
+            <StyledIconButton aria-label="delete" size="large">
+              <DeleteIcon />
+            </StyledIconButton>
+          ) : null}
+          <Video autoPlay muted loop key={`video-${key}`}>
             <source src={video.url} type="video/webm" />
           </Video>
         </Overlay>
@@ -85,6 +97,12 @@ const FeedContainer = styled.div`
 
 const Video = styled.video`
   width: 100%;
+`;
+
+const StyledIconButton = styled(IconButton)`
+  position: absolute;
+  right: 1rem;
+  top: 1.5rem;
 `;
 
 const Overlay = styled.div`
