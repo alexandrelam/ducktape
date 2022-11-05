@@ -12,7 +12,8 @@ import {
   getDocs,
   collection,
   where,
-  addDoc,
+  setDoc,
+  doc,
 } from "firebase/firestore";
 
 // TODO: Add SDKs for Firebase products that you want to use
@@ -43,11 +44,14 @@ const signInWithGoogle = async () => {
     const q = query(collection(db, "users"), where("uid", "==", user.uid));
     const docs = await getDocs(q);
     if (docs.docs.length === 0) {
-      await addDoc(collection(db, "users"), {
+      const usersRef = collection(db, "users");
+      await setDoc(doc(usersRef, user.uid), {
         uid: user.uid,
         name: user.displayName,
         email: user.email,
         photoURL: user.photoURL,
+        videos: [],
+        friends: [],
       });
     }
   } catch (err: any) {

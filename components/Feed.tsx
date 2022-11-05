@@ -1,24 +1,48 @@
 import { useState, useEffect } from "react";
 import styled from "@emotion/styled";
 import { getDownloadURL, getStorage, ref, listAll } from "firebase/storage";
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "../firebase/config";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth } from "../firebase/config";
+import { Video } from "../types/Video";
+import { User } from "../types/User";
 
 export function Feed() {
+  const [user] = useAuthState(auth);
   const [videos, setVideos] = useState<string[]>([]);
 
   const storage = getStorage();
-  const listRef = ref(storage);
+
+  async function getVideosFromUser(userUid: string) {
+    const v: string[] = [];
+    const userDoc = await getDoc(doc(db, "users", userUid));
+    const videos = userDoc.data()?.videos;
+    await Promise.all(
+      videos.map(async (video: Video) => {
+        const url = await getDownloadURL(ref(storage, video.path));
+        v.push(url);
+      })
+    );
+    return v;
+  }
 
   useEffect(() => {
     // Find all the prefixes and items.
     (async () => {
       const v: string[] = [];
-      const res = await listAll(listRef);
+      const userDoc = await getDoc(doc(db, "users", user!.uid));
+      // add my videos
+      v.push(...(await getVideosFromUser(user!.uid)));
+
+      // add my friends videos
+      const friends = userDoc.data()?.friends;
       await Promise.all(
-        res.items.map(async (itemRef) => {
-          const url = await getDownloadURL(itemRef);
-          v.push(url);
+        friends.map(async (friend: User) => {
+          v.push(...(await getVideosFromUser(friend.uid)));
         })
       );
+
       setVideos(v);
     })();
   }, []);

@@ -32,11 +32,11 @@ export function UserUid() {
     <>
       <Snackbar open={open} autoHideDuration={2000} onClose={handleClose}>
         <Alert onClose={handleClose} severity="success" sx={{ width: "100%" }}>
-          Le uid a été copié dans le presse-papier
+          Le UID a été copié dans le presse-papier
         </Alert>
       </Snackbar>
       <Button onClick={copyToClipboard}>
-        <span>id: {user?.uid}</span>
+        <span>UID: {user?.uid}</span>
         <ContentPasteIcon />
       </Button>
     </>

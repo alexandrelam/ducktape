@@ -5,6 +5,8 @@ import { useRouter } from "next/router";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../firebase/config";
 import { UserUid } from "./UserUid";
+import { AddFriend } from "./AddFriend";
+import { FriendList } from "./FriendList";
 
 export function Settings() {
   const router = useRouter();
@@ -35,6 +37,8 @@ export function Settings() {
       </Button>
       <UserUid />
       <h2>Amis</h2>
+      <AddFriend />
+      <FriendList />
     </Container>
   );
 }
