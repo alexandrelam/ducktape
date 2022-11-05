@@ -59,6 +59,7 @@ export function Camera() {
             <StyledButton
               variant="contained"
               color="error"
+              // @ts-ignore
               component="label"
               onClick={handleCancel}
             >
@@ -68,6 +69,7 @@ export function Camera() {
           {!capturing && recordedChunks.length === 0 ? (
             <StyledButton
               variant="contained"
+              // @ts-ignore
               component="label"
               onClick={handleStartCaptureClick}
             >
@@ -77,6 +79,7 @@ export function Camera() {
           {capturing ? (
             <StyledButton
               variant="contained"
+              // @ts-ignore
               component="label"
               color="error"
               onClick={handleStartCaptureClick}
