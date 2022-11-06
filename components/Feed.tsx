@@ -130,6 +130,8 @@ const StyledIconButton = styled(IconButton)`
   position: absolute;
   right: 1rem;
   top: 1.5rem;
+  color: white;
+  opacity: 0.3;
   z-index: 150;
 `;
 
