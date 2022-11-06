@@ -4,14 +4,16 @@ import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
 import type { User } from "firebase/auth";
 import { deleteVideo } from "../firebase/videos";
+import { Dispatch, SetStateAction } from "react";
 
 type Props = {
-  videos: Video[];
-  loading: boolean;
   user: User;
+  videos: Video[];
+  setVideos: Dispatch<SetStateAction<Video[]>>;
+  loading: boolean;
 };
 
-export function Feed({ user, videos, loading }: Props) {
+export function Feed({ user, videos, setVideos, loading }: Props) {
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -33,7 +35,10 @@ export function Feed({ user, videos, loading }: Props) {
             <StyledIconButton
               aria-label="delete"
               size="large"
-              onClick={() => deleteVideo(user, videos, video)}
+              onClick={() => {
+                setVideos(videos.filter((v) => v.url !== video.url));
+                deleteVideo(user, videos, video);
+              }}
             >
               <DeleteIcon />
             </StyledIconButton>

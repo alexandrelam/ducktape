@@ -52,7 +52,12 @@ export default function Home() {
               user={user}
               setPage={setPage}
             />
-            <Feed user={user} videos={videos} loading={loading} />
+            <Feed
+              user={user}
+              videos={videos}
+              setVideos={setVideos}
+              loading={loading}
+            />
             <Settings />
           </SwipeableViews>
         </Container>
