@@ -43,7 +43,7 @@ export const useCamera = () => {
     [setRecordedChunks]
   );
 
-  const handleUpload = useCallback(async () => {
+  const handleFirebaseUpload = useCallback(async () => {
     if (recordedChunks.length) {
       const blob = new Blob(recordedChunks, {
         type: "video/webm",
@@ -79,7 +79,7 @@ export const useCamera = () => {
     capturing,
     recordedChunks,
     handleStartCaptureClick,
-    handleUpload,
+    handleFirebaseUpload,
     handleCancel,
   };
 };

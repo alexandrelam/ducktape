@@ -1,84 +1,17 @@
-import { useState, useEffect } from "react";
 import styled from "@emotion/styled";
-import {
-  getDownloadURL,
-  getStorage,
-  ref,
-  listAll,
-  deleteObject,
-} from "firebase/storage";
-import { arrayRemove, doc, getDoc, updateDoc } from "firebase/firestore";
-import { db } from "../firebase/config";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { auth } from "../firebase/config";
 import { Video } from "../types/Video";
-import { User } from "../types/User";
 import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
+import type { User } from "firebase/auth";
+import { deleteVideo } from "../firebase/videos";
 
-export function Feed() {
-  const [user] = useAuthState(auth);
-  const [videos, setVideos] = useState<Video[]>([]);
-  const [loading, setLoading] = useState(true);
+type Props = {
+  videos: Video[];
+  loading: boolean;
+  user: User;
+};
 
-  const storage = getStorage();
-
-  async function getVideosFromUser(userUid: string) {
-    const v: Video[] = [];
-    const userDoc = await getDoc(doc(db, "users", userUid));
-    const videos = userDoc.data()?.videos;
-    await Promise.all(
-      videos.map(async (video: Video) => {
-        const url = await getDownloadURL(ref(storage, video.path));
-        v.push({
-          ...video,
-          url,
-          author: userDoc.data()?.name || "",
-          authorUid: userDoc.id,
-        });
-      })
-    );
-    return v;
-  }
-
-  async function fetchFeed() {
-    const v: Video[] = [];
-    const userDoc = await getDoc(doc(db, "users", user!.uid));
-    // add my videos
-    v.push(...(await getVideosFromUser(user!.uid)));
-
-    // add my friends videos
-    const friends = userDoc.data()?.friends;
-    await Promise.all(
-      friends.map(async (friend: User) => {
-        v.push(...(await getVideosFromUser(friend.uid)));
-      })
-    );
-    setVideos(v);
-    setLoading(false);
-  }
-
-  async function deleteVideo(video: Video) {
-    const v = {
-      createdAt: video.createdAt,
-      path: video.path,
-    };
-    try {
-      setVideos(videos.filter((v) => v.path !== video.path));
-      updateDoc(doc(db, "users", user!.uid), {
-        videos: arrayRemove(v),
-      });
-      const videoRef = ref(storage, video.path);
-      deleteObject(videoRef);
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-  useEffect(() => {
-    fetchFeed();
-  }, []);
-
+export function Feed({ user, videos, loading }: Props) {
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -96,11 +29,11 @@ export function Feed() {
       {videos.map((video) => (
         <Overlay key={video.url}>
           <OverlayText>{video.author}</OverlayText>
-          {user?.uid === video.authorUid ? (
+          {user.uid === video.authorUid ? (
             <StyledIconButton
               aria-label="delete"
               size="large"
-              onClick={() => deleteVideo(video)}
+              onClick={() => deleteVideo(user, videos, video)}
             >
               <DeleteIcon />
             </StyledIconButton>
