@@ -1,7 +1,13 @@
 import { useState, useEffect } from "react";
 import styled from "@emotion/styled";
-import { getDownloadURL, getStorage, ref, listAll } from "firebase/storage";
-import { doc, getDoc } from "firebase/firestore";
+import {
+  getDownloadURL,
+  getStorage,
+  ref,
+  listAll,
+  deleteObject,
+} from "firebase/storage";
+import { arrayRemove, doc, getDoc, updateDoc } from "firebase/firestore";
 import { db } from "../firebase/config";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../firebase/config";
@@ -35,25 +41,42 @@ export function Feed() {
     return v;
   }
 
+  async function fetchFeed() {
+    const v: Video[] = [];
+    const userDoc = await getDoc(doc(db, "users", user!.uid));
+    // add my videos
+    v.push(...(await getVideosFromUser(user!.uid)));
+
+    // add my friends videos
+    const friends = userDoc.data()?.friends;
+    await Promise.all(
+      friends.map(async (friend: User) => {
+        v.push(...(await getVideosFromUser(friend.uid)));
+      })
+    );
+    setVideos(v);
+    setLoading(false);
+  }
+
+  async function deleteVideo(video: Video) {
+    const v = {
+      createdAt: video.createdAt,
+      path: video.path,
+    };
+    try {
+      setVideos(videos.filter((v) => v.path !== video.path));
+      updateDoc(doc(db, "users", user!.uid), {
+        videos: arrayRemove(v),
+      });
+      const videoRef = ref(storage, video.path);
+      deleteObject(videoRef);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   useEffect(() => {
-    // Find all the prefixes and items.
-    (async () => {
-      const v: Video[] = [];
-      const userDoc = await getDoc(doc(db, "users", user!.uid));
-      // add my videos
-      v.push(...(await getVideosFromUser(user!.uid)));
-
-      // add my friends videos
-      const friends = userDoc.data()?.friends;
-      await Promise.all(
-        friends.map(async (friend: User) => {
-          v.push(...(await getVideosFromUser(friend.uid)));
-        })
-      );
-
-      setVideos(v);
-      setLoading(false);
-    })();
+    fetchFeed();
   }, []);
 
   if (loading) {
@@ -70,15 +93,19 @@ export function Feed() {
 
   return (
     <FeedContainer>
-      {videos.map((video, key) => (
-        <Overlay key={`overlay-${key}`}>
-          <OverlayText key={`overlay-text-${key}`}>{video.author}</OverlayText>
+      {videos.map((video) => (
+        <Overlay key={video.url}>
+          <OverlayText>{video.author}</OverlayText>
           {user?.uid === video.authorUid ? (
-            <StyledIconButton aria-label="delete" size="large">
+            <StyledIconButton
+              aria-label="delete"
+              size="large"
+              onClick={() => deleteVideo(video)}
+            >
               <DeleteIcon />
             </StyledIconButton>
           ) : null}
-          <Video autoPlay muted loop key={`video-${key}`}>
+          <Video autoPlay muted loop>
             <source src={video.url} type="video/webm" />
           </Video>
         </Overlay>
@@ -103,6 +130,7 @@ const StyledIconButton = styled(IconButton)`
   position: absolute;
   right: 1rem;
   top: 1.5rem;
+  z-index: 150;
 `;
 
 const Overlay = styled.div`
