@@ -29,7 +29,7 @@ export function Settings() {
 
   useEffect(() => {
     fetchFriends();
-  });
+  }, []);
 
   if (error)
     return (

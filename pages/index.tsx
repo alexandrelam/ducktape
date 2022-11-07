@@ -13,7 +13,7 @@ import { fetchFeed } from "../firebase/videos";
 
 export default function Home() {
   const [page, setPage] = useState(1);
-  const [user] = useAuthState(auth);
+  const [user, error] = useAuthState(auth);
   const [videos, setVideos] = useState<Video[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -32,8 +32,12 @@ export default function Home() {
     }
   }, [user]);
 
-  if (!user) {
+  if (error) {
     return <h1>Couldn't fetch user</h1>;
+  }
+
+  if (!user || loading) {
+    return <h1>Loading...</h1>;
   }
 
   return (
@@ -56,7 +60,7 @@ export default function Home() {
               user={user}
               videos={videos}
               setVideos={setVideos}
-              loading={loading}
+              setPage={setPage}
             />
             <Settings />
           </SwipeableViews>

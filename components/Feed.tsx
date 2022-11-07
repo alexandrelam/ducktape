@@ -5,25 +5,18 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import type { User } from "firebase/auth";
 import { deleteVideo } from "../firebase/videos";
 import { Dispatch, SetStateAction } from "react";
+import { EmptyFeed } from "./EmptyFeed";
 
 type Props = {
   user: User;
   videos: Video[];
   setVideos: Dispatch<SetStateAction<Video[]>>;
-  loading: boolean;
+  setPage: (page: number) => void;
 };
 
-export function Feed({ user, videos, setVideos, loading }: Props) {
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
+export function Feed({ user, videos, setVideos, setPage }: Props) {
   if (videos.length === 0) {
-    return (
-      <div>
-        Vous n'avez pas encore de vidéos, créez une vidéo ou ajoutez des amis !
-      </div>
-    );
+    return <EmptyFeed setPage={setPage} />;
   }
 
   return (
