@@ -29,8 +29,33 @@ async function getVideosFromUser(userUid: string) {
   return v;
 }
 
+function dateMoreThanOneDayAgo(date: Date) {
+  const oneDay = 24 * 60 * 60 * 1000;
+  return new Date().getTime() - date.getTime() > oneDay;
+}
+
+async function deleteExpiredVideos(videos: Video[]) {
+  const videosToDelete: Video[] = [];
+
+  videos.forEach((video) => {
+    if (dateMoreThanOneDayAgo(new Date(video.createdAt))) {
+      videosToDelete.push(video);
+    }
+  });
+
+  videosToDelete.forEach(async (video) => {
+    const storage = getStorage();
+    await deleteObject(ref(storage, video.path));
+    await updateDoc(doc(db, "users", video.authorUid), {
+      videos: arrayRemove(video),
+    });
+  });
+
+  return videosToDelete;
+}
+
 export async function fetchFeed(user: FirebaseUser) {
-  const v: Video[] = [];
+  let v: Video[] = [];
   const userDoc = await getDoc(doc(db, "users", user!.uid));
   // add my videos
   v.push(...(await getVideosFromUser(user!.uid)));
@@ -42,6 +67,12 @@ export async function fetchFeed(user: FirebaseUser) {
       v.push(...(await getVideosFromUser(friend.uid)));
     })
   );
+
+  // delete expired videos
+  // we do that so user don't have to wait for the video to be deleted
+  const videosToDelete = await deleteExpiredVideos(v);
+  v = v.filter((video) => !videosToDelete.includes(video));
+
   return v;
 }
 
