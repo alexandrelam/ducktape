@@ -8,7 +8,7 @@ import { db } from "../firebase/config";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useState } from "react";
 import { auth } from "../firebase/config";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 type Props = {

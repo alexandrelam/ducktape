@@ -61,6 +61,7 @@ export function Camera() {
         ) : (
           <Webcam
             audio={false}
+            // @ts-ignore
             ref={webcamRef}
             screenshotFormat="image/jpeg"
             videoConstraints={videoConstraints}
