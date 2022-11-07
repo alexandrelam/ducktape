@@ -3,7 +3,7 @@
   "background_color": "#5ac161",
   "display": "standalone",
   "scope": "/",
-  "start_url": "/",
+  "start_url": "https://alexandrelam.github.io/ducktape/",
   "name": "Ducktape",
   "short_name": "DT",
   "description": "Share 2 seconds videos w/ your friends!",
