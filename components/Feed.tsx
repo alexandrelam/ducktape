@@ -4,6 +4,14 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { deleteVideo } from "../firebase/videos";
 import { EmptyFeed } from "./EmptyFeed";
 import { useStore } from "../hooks/useStore";
+import { Video } from "../types/Video";
+
+function dateToTime(date: Date) {
+  return date.toLocaleTimeString("fr-FR", {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+}
 
 export function Feed() {
   const { user, videos, setVideos, setPage } = useStore();
@@ -11,11 +19,20 @@ export function Feed() {
     return <EmptyFeed setPage={setPage} />;
   }
 
+  const sortedVideos = videos.sort((a: Video, b: Video) => {
+    const aDate = new Date(a.createdAt);
+    const bDate = new Date(b.createdAt);
+    return bDate.getTime() - aDate.getTime();
+  });
+
   return (
     <FeedContainer>
-      {videos.map((video) => (
+      {sortedVideos.map((video) => (
         <Overlay key={video.url}>
-          <OverlayText>{video.author}</OverlayText>
+          <OverlayTextWrapper>
+            <OverlayText>{video.author}</OverlayText>
+            <OverlayText>{dateToTime(new Date(video.createdAt))}</OverlayText>
+          </OverlayTextWrapper>
           {user.uid === video.authorUid ? (
             <StyledIconButton
               aria-label="delete"
@@ -62,10 +79,15 @@ const Overlay = styled.div`
   position: relative;
 `;
 
-const OverlayText = styled.h2`
+const OverlayTextWrapper = styled.div`
   position: absolute;
+  margin-left: 1rem;
+  margin-top: 1rem;
+`;
+
+const OverlayText = styled.h2`
   color: white;
+  margin: 0.2rem;
   font-size: 2rem;
   opacity: 0.5;
-  margin-left: 1rem;
 `;
