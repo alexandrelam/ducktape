@@ -3,7 +3,8 @@
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
-  assetPrefix: "/ducktape/",
+  assetPrefix: process.env.NODE_ENV === "development" ? "" : "/ducktape/",
+  basePath: process.env.NODE_ENV === "development" ? "" : "/ducktape",
   env: {
     API_KEY: process.env.API_KEY,
     AUTH_DOMAIN: process.env.AUTH_DOMAIN,
@@ -12,6 +13,7 @@ const nextConfig = {
     MESSAGING_SENDER_ID: process.env.MESSAGING_SENDER_ID,
     APP_ID: process.env.APP_ID,
     MEASUREMENT_ID: process.env.MEASUREMENT_ID,
+    NODE_ENV: process.env.NODE_ENV,
   },
 };
 
