@@ -12,6 +12,8 @@ import { fetchFeed } from "../firebase/videos";
 import { createContext } from "react";
 import type { User as FirebaseUser } from "firebase/auth";
 import Router from "next/router";
+import CircularProgress from "@mui/material/CircularProgress";
+import { FeedLoading } from "../components/FeedLoading";
 
 type ContextProps = {
   user: FirebaseUser;
@@ -19,16 +21,16 @@ type ContextProps = {
   setPage: (page: number) => void;
   videos: Video[];
   setVideos: (videos: Video[]) => void;
-  setLoading: (loading: boolean) => void;
+  setVideoLoading: (loading: boolean) => void;
 };
 
 export const Store = createContext<ContextProps | null>(null);
 
 export default function Home() {
   const [page, setPage] = useState(1);
-  const [user, error] = useAuthState(auth);
+  const [user, loading, error] = useAuthState(auth);
   const [videos, setVideos] = useState<Video[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [videoLoading, setVideoLoading] = useState(true);
 
   const swipeableStyles = {
     height: "90vh",
@@ -44,7 +46,7 @@ export default function Home() {
     (async () => {
       const v = await fetchFeed(user);
       setVideos(v);
-      setLoading(false);
+      setVideoLoading(false);
     })();
   }, [user]);
 
@@ -53,12 +55,16 @@ export default function Home() {
   }
 
   if (!user || loading) {
-    return <h1>Loading...</h1>;
+    return (
+      <LoadingWrapper>
+        <CircularProgress />
+      </LoadingWrapper>
+    );
   }
 
   return (
     <Store.Provider
-      value={{ user, page, setPage, videos, setVideos, setLoading }}
+      value={{ user, page, setPage, videos, setVideos, setVideoLoading }}
     >
       <Wrapper>
         <Container>
@@ -69,7 +75,7 @@ export default function Home() {
             containerStyle={swipeableStyles}
           >
             <Camera />
-            <Feed />
+            {videoLoading ? <FeedLoading /> : <Feed />}
             <Settings />
           </SwipeableViews>
         </Container>
@@ -80,6 +86,13 @@ export default function Home() {
     </Store.Provider>
   );
 }
+
+const LoadingWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 90vh;
+`;
 
 const Container = styled.div`
   flex-grow: 1;

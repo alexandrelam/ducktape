@@ -7,8 +7,8 @@ export default function login() {
   const router = useRouter();
 
   async function handleLogin() {
-    await signInWithGoogle();
     router.push("/");
+    await signInWithGoogle();
   }
 
   return (

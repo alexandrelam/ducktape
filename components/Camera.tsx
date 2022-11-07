@@ -12,7 +12,7 @@ import { fetchFeed } from "../firebase/videos";
 import { useStore } from "../hooks/useStore";
 
 export function Camera() {
-  const { user, setVideos, setLoading, setPage } = useStore();
+  const { user, setVideos, setVideoLoading, setPage } = useStore();
 
   const {
     webcamRef,
@@ -42,11 +42,11 @@ export function Camera() {
   }
 
   async function handleUpload() {
-    setLoading(true);
+    setVideoLoading(true);
     await handleFirebaseUpload();
     const v = await fetchFeed(user);
     setVideos(v);
-    setLoading(false);
+    setVideoLoading(false);
     setPage(1);
   }
 
