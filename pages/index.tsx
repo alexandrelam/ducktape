@@ -11,9 +11,9 @@ import { Video } from "../types/Video";
 import { fetchFeed } from "../firebase/videos";
 import { createContext } from "react";
 import type { User as FirebaseUser } from "firebase/auth";
-import Router from "next/router";
 import CircularProgress from "@mui/material/CircularProgress";
 import { FeedLoading } from "../components/FeedLoading";
+import { useRouter } from "next/router";
 
 type ContextProps = {
   user: FirebaseUser;
@@ -27,6 +27,7 @@ type ContextProps = {
 export const Store = createContext<ContextProps | null>(null);
 
 export default function Home() {
+  const router = useRouter();
   const [page, setPage] = useState(1);
   const [user, loading, error] = useAuthState(auth);
   const [videos, setVideos] = useState<Video[]>([]);
@@ -38,13 +39,13 @@ export default function Home() {
   };
 
   useEffect(() => {
+    if (loading) return;
     if (!user) {
-      Router.push("/login");
+      router.push("/login");
       return;
     }
-
     (async () => {
-      const v = await fetchFeed(user);
+      const v = await fetchFeed(user!);
       setVideos(v);
       setVideoLoading(false);
     })();
