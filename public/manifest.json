@@ -1,7 +1,7 @@
 {
   "theme_color": "#ecd632",
   "background_color": "#5ac161",
-  "display": "browser",
+  "display": "standalone",
   "scope": "/",
   "start_url": "/",
   "name": "Ducktape",
