@@ -1,19 +1,23 @@
 import { useState, useRef, useCallback } from "react";
 import { getStorage, ref, uploadBytes } from "firebase/storage";
-import { setDoc, doc, updateDoc, arrayUnion } from "firebase/firestore";
+import { doc, updateDoc, arrayUnion } from "firebase/firestore";
 import { wait2Second } from "../utils/wait";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../firebase/config";
 import { db } from "../firebase/config";
+import type Webcam from "react-webcam";
 
 export const useCamera = () => {
-  const webcamRef = useRef(null);
-  const mediaRecorderRef = useRef(null);
+  const webcamRef = useRef<Webcam>();
+  const mediaRecorderRef = useRef();
   const [capturing, setCapturing] = useState(false);
   const [recordedChunks, setRecordedChunks] = useState([]);
   const [user] = useAuthState(auth);
 
   const handleStartCaptureClick = useCallback(async () => {
+    if (!webcamRef.current) return;
+    if (webcamRef.current && !webcamRef.current.stream) return;
+
     setCapturing(true);
     // @ts-ignore
     mediaRecorderRef.current = new MediaRecorder(webcamRef.current.stream, {
