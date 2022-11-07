@@ -1,20 +1,12 @@
 import styled from "@emotion/styled";
-import { Video } from "../types/Video";
 import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
-import type { User } from "firebase/auth";
 import { deleteVideo } from "../firebase/videos";
-import { Dispatch, SetStateAction } from "react";
 import { EmptyFeed } from "./EmptyFeed";
+import { useStore } from "../hooks/useStore";
 
-type Props = {
-  user: User;
-  videos: Video[];
-  setVideos: Dispatch<SetStateAction<Video[]>>;
-  setPage: (page: number) => void;
-};
-
-export function Feed({ user, videos, setVideos, setPage }: Props) {
+export function Feed() {
+  const { user, videos, setVideos, setPage } = useStore();
   if (videos.length === 0) {
     return <EmptyFeed setPage={setPage} />;
   }

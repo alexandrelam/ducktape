@@ -10,6 +10,19 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../firebase/config";
 import { Video } from "../types/Video";
 import { fetchFeed } from "../firebase/videos";
+import { createContext } from "react";
+import type { User as FirebaseUser } from "firebase/auth";
+
+type ContextProps = {
+  user: FirebaseUser;
+  page: number;
+  setPage: (page: number) => void;
+  videos: Video[];
+  setVideos: (videos: Video[]) => void;
+  setLoading: (loading: boolean) => void;
+};
+
+export const Store = createContext<ContextProps | null>(null);
 
 export default function Home() {
   const [page, setPage] = useState(1);
@@ -41,35 +54,29 @@ export default function Home() {
   }
 
   return (
-    <ProtectedRoute>
-      <Wrapper>
-        <Container>
-          <SwipeableViews
-            index={page}
-            onChangeIndex={setPage}
-            // @ts-ignore
-            containerStyle={swipeableStyles}
-          >
-            <Camera
-              setVideos={setVideos}
-              setLoading={setLoading}
-              user={user}
-              setPage={setPage}
-            />
-            <Feed
-              user={user}
-              videos={videos}
-              setVideos={setVideos}
-              setPage={setPage}
-            />
-            <Settings />
-          </SwipeableViews>
-        </Container>
-        <NavBarPosition>
-          <Navbar page={page} setPage={setPage} />
-        </NavBarPosition>
-      </Wrapper>
-    </ProtectedRoute>
+    <Store.Provider
+      value={{ user, page, setPage, videos, setVideos, setLoading }}
+    >
+      <ProtectedRoute>
+        <Wrapper>
+          <Container>
+            <SwipeableViews
+              index={page}
+              onChangeIndex={setPage}
+              // @ts-ignore
+              containerStyle={swipeableStyles}
+            >
+              <Camera />
+              <Feed />
+              <Settings />
+            </SwipeableViews>
+          </Container>
+          <NavBarPosition>
+            <Navbar />
+          </NavBarPosition>
+        </Wrapper>
+      </ProtectedRoute>
+    </Store.Provider>
   );
 }
 

@@ -3,12 +3,11 @@ import BottomNavigationAction from "@mui/material/BottomNavigationAction";
 import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
 import VideoLibraryIcon from "@mui/icons-material/VideoLibrary";
 import SettingsIcon from "@mui/icons-material/Settings";
+import { useStore } from "../hooks/useStore";
 
-type Props = {
-  page: number;
-  setPage: (value: number) => void;
-};
-export function Navbar({ page, setPage }: Props) {
+export function Navbar() {
+  const { page, setPage } = useStore();
+
   return (
     <BottomNavigation
       showLabels

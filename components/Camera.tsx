@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import { Dispatch, SetStateAction, useState } from "react";
+import { useContext, useState } from "react";
 import Webcam from "react-webcam";
 import Button from "@mui/material/Button";
 import PhotoCamera from "@mui/icons-material/PhotoCamera";
@@ -8,18 +8,12 @@ import CancelIcon from "@mui/icons-material/Cancel";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
 import { useCamera } from "../hooks/useCamera";
 import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
-import { Video } from "../types/Video";
 import { fetchFeed } from "../firebase/videos";
-import type { User } from "firebase/auth";
+import { useStore } from "../hooks/useStore";
 
-type Props = {
-  user: User;
-  setVideos: Dispatch<SetStateAction<Video[]>>;
-  setLoading: Dispatch<SetStateAction<boolean>>;
-  setPage: Dispatch<SetStateAction<number>>;
-};
+export function Camera() {
+  const { user, setVideos, setLoading, setPage } = useStore();
 
-export function Camera({ user, setVideos, setLoading, setPage }: Props) {
   const {
     webcamRef,
     capturing,
