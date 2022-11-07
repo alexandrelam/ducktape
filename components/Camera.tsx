@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import { useContext, useState } from "react";
+import { useState } from "react";
 import Webcam from "react-webcam";
 import Button from "@mui/material/Button";
 import PhotoCamera from "@mui/icons-material/PhotoCamera";
@@ -7,9 +7,9 @@ import FlipCameraAndroidIcon from "@mui/icons-material/FlipCameraAndroid";
 import CancelIcon from "@mui/icons-material/Cancel";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
 import { useCamera } from "../hooks/useCamera";
-import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
 import { fetchFeed } from "../firebase/videos";
 import { useStore } from "../hooks/useStore";
+import { CountdownButton } from "./CountdownButton";
 
 export function Camera() {
   const { user, setVideos, setVideoLoading, setPage } = useStore();
@@ -89,17 +89,7 @@ export function Camera() {
               <PhotoCamera />
             </StyledButton>
           ) : null}
-          {capturing ? (
-            <StyledButton
-              variant="contained"
-              // @ts-ignore
-              component="label"
-              color="error"
-              onClick={handleStartCaptureClick}
-            >
-              <FiberManualRecordIcon />
-            </StyledButton>
-          ) : null}
+          {capturing ? <CountdownButton /> : null}
           {recordedChunks.length > 0 && (
             <Button
               onClick={handleUpload}
