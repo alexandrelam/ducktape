@@ -1,5 +1,4 @@
 import styled from "@emotion/styled";
-import ProtectedRoute from "../layouts/ProtectedRoute";
 import { Navbar } from "../components/Navbar";
 import { useEffect, useState } from "react";
 import { Feed } from "../components/Feed";
@@ -12,6 +11,7 @@ import { Video } from "../types/Video";
 import { fetchFeed } from "../firebase/videos";
 import { createContext } from "react";
 import type { User as FirebaseUser } from "firebase/auth";
+import Router from "next/router";
 
 type ContextProps = {
   user: FirebaseUser;
@@ -36,13 +36,16 @@ export default function Home() {
   };
 
   useEffect(() => {
-    if (user) {
-      (async () => {
-        const v = await fetchFeed(user);
-        setVideos(v);
-        setLoading(false);
-      })();
+    if (!user) {
+      Router.push("/login");
+      return;
     }
+
+    (async () => {
+      const v = await fetchFeed(user);
+      setVideos(v);
+      setLoading(false);
+    })();
   }, [user]);
 
   if (error) {
@@ -57,25 +60,23 @@ export default function Home() {
     <Store.Provider
       value={{ user, page, setPage, videos, setVideos, setLoading }}
     >
-      <ProtectedRoute>
-        <Wrapper>
-          <Container>
-            <SwipeableViews
-              index={page}
-              onChangeIndex={setPage}
-              // @ts-ignore
-              containerStyle={swipeableStyles}
-            >
-              <Camera />
-              <Feed />
-              <Settings />
-            </SwipeableViews>
-          </Container>
-          <NavBarPosition>
-            <Navbar />
-          </NavBarPosition>
-        </Wrapper>
-      </ProtectedRoute>
+      <Wrapper>
+        <Container>
+          <SwipeableViews
+            index={page}
+            onChangeIndex={setPage}
+            // @ts-ignore
+            containerStyle={swipeableStyles}
+          >
+            <Camera />
+            <Feed />
+            <Settings />
+          </SwipeableViews>
+        </Container>
+        <NavBarPosition>
+          <Navbar />
+        </NavBarPosition>
+      </Wrapper>
     </Store.Provider>
   );
 }
