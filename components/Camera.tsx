@@ -10,6 +10,8 @@ import { useCamera } from "../hooks/useCamera";
 import { fetchFeed } from "../firebase/videos";
 import { useStore } from "../hooks/useStore";
 import { CountdownButton } from "./CountdownButton";
+import Backdrop from "@mui/material/Backdrop";
+import CircularProgress from "@mui/material/CircularProgress";
 
 export function Camera() {
   const { user, setVideos, setVideoLoading, setPage } = useStore();
@@ -24,6 +26,7 @@ export function Camera() {
   } = useCamera();
 
   const [isFrontCamera, setIsFrontCamera] = useState(true);
+  const [backdropLoadingOpen, setBackdropLoadingOpen] = useState(false);
 
   const videoConstraints = {
     width: 1280,
@@ -43,7 +46,9 @@ export function Camera() {
 
   async function handleUpload() {
     setVideoLoading(true);
+    setBackdropLoadingOpen(true);
     await handleFirebaseUpload();
+    setBackdropLoadingOpen(false);
     const v = await fetchFeed(user);
     setVideos(v);
     setVideoLoading(false);
@@ -53,6 +58,12 @@ export function Camera() {
   return (
     <>
       <Wrapper>
+        <Backdrop
+          sx={{ color: "#fff", zIndex: 200 }}
+          open={backdropLoadingOpen}
+        >
+          <CircularProgress color="inherit" />
+        </Backdrop>
         <FlipCameraButton variant="contained" onClick={flipCamera}>
           <FlipCameraAndroidIcon />
         </FlipCameraButton>
