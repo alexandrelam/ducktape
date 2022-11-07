@@ -50,7 +50,7 @@ export default function Home() {
       setVideos(v);
       setVideoLoading(false);
     })();
-  }, [user]);
+  }, [user, loading]);
 
   if (error) {
     return <h1>Couldn't fetch user</h1>;
