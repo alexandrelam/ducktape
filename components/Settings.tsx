@@ -46,13 +46,13 @@ export function Settings() {
         ) : null}
         <span>{user.displayName}</span>
       </ProfileWrapper>
-      <Button color="error" onClick={handleLogout}>
-        Se déconnecter
-      </Button>
       <UserUid />
       <h2>Amis</h2>
       <AddFriend fetchFriends={fetchFriends} />
       <FriendList friends={friends} fetchFriends={fetchFriends} />
+      <Button color="error" onClick={handleLogout}>
+        Se déconnecter
+      </Button>
     </Container>
   );
 }

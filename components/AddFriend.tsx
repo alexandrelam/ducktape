@@ -6,17 +6,10 @@ import { arrayUnion, doc, updateDoc } from "firebase/firestore";
 import { getDoc } from "firebase/firestore";
 import { db } from "../firebase/config";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { useState, forwardRef } from "react";
+import { useState } from "react";
 import { auth } from "../firebase/config";
-import Snackbar from "@mui/material/Snackbar";
-import MuiAlert, { AlertProps } from "@mui/material/Alert";
-
-const Alert = forwardRef<HTMLDivElement, AlertProps>(function Alert(
-  props,
-  ref
-) {
-  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-});
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 type Props = {
   fetchFriends: () => Promise<void>;
@@ -25,7 +18,9 @@ type Props = {
 export function AddFriend({ fetchFriends }: Props) {
   const [user] = useAuthState(auth);
   const [friendUid, setFriendUid] = useState<string>("");
-  const [open, setOpen] = useState(false);
+
+  const notifySuccess = () => toast.success("Ami ajouté");
+  const notifyError = () => toast.error("L'utilisateur n'existe pas");
 
   async function addFriend(userUid: string, friendUid: string) {
     const friendDoc = await getDoc(doc(db, "users", friendUid));
@@ -46,14 +41,11 @@ export function AddFriend({ fetchFriends }: Props) {
         await addFriend(user.uid, friendUid);
         await addFriend(friendUid, user.uid);
         fetchFriends();
+        notifySuccess();
       } catch (e) {
-        setOpen(true);
+        notifyError();
       }
     }
-  }
-
-  function handleClose() {
-    setOpen(false);
   }
 
   return (
@@ -68,11 +60,6 @@ export function AddFriend({ fetchFriends }: Props) {
       <Button variant="contained" onClick={handleAddFriend}>
         <PersonAddIcon />
       </Button>
-      <Snackbar open={open} autoHideDuration={2000} onClose={handleClose}>
-        <Alert onClose={handleClose} severity="error" sx={{ width: "100%" }}>
-          L'utilisateur n'a pas été ajouté en amis
-        </Alert>
-      </Snackbar>
     </Wrapper>
   );
 }

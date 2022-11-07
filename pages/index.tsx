@@ -14,6 +14,7 @@ import type { User as FirebaseUser } from "firebase/auth";
 import CircularProgress from "@mui/material/CircularProgress";
 import { FeedLoading } from "../components/FeedLoading";
 import { useRouter } from "next/router";
+import { ToastContainer } from "react-toastify";
 
 type ContextProps = {
   user: FirebaseUser;
@@ -84,6 +85,7 @@ export default function Home() {
           <Navbar />
         </NavBarPosition>
       </Wrapper>
+      <ToastContainer autoClose={1000} />
     </Store.Provider>
   );
 }
