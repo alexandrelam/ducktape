@@ -1,6 +1,12 @@
 /** @type {import('next').NextConfig} */
 
-const nextConfig = {
+const withPWA = require("next-pwa")({
+  dest: "public",
+  register: true,
+  skipWaiting: true,
+});
+
+const nextConfig = withPWA({
   reactStrictMode: true,
   swcMinify: true,
   assetPrefix: process.env.NODE_ENV === "development" ? "" : "/ducktape/",
@@ -14,7 +20,7 @@ const nextConfig = {
     APP_ID: process.env.APP_ID,
     MEASUREMENT_ID: process.env.MEASUREMENT_ID,
   },
-};
+});
 
 module.exports = nextConfig;
 
