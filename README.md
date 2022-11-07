@@ -176,7 +176,7 @@ Project Link: [https://github.com/alexandrelam/ducktape](https://github.com/alex
 [issues-shield]: https://img.shields.io/github/issues/alexandrelam/ducktape.svg?style=for-the-badge
 [issues-url]: https://github.com/alexandrelam/ducktape/issues
 [license-shield]: https://img.shields.io/github/license/alexandrelam/ducktape.svg?style=for-the-badge
-[license-url]: https://github.com/alexandrelam/ducktape/blob/master/LICENSE.txt
+[license-url]: https://github.com/alexandrelam/ducktape/blob/main/LICENSE
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [linkedin-url]: https://www.linkedin.com/in/alexandre-lam-74787b191/
 [product-screenshot]: images/screenshot.png
