@@ -3,7 +3,6 @@
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
-  trailingSlash: true,
   env: {
     API_KEY: process.env.API_KEY,
     AUTH_DOMAIN: process.env.AUTH_DOMAIN,
