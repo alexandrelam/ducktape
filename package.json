@@ -8,7 +8,7 @@
   },
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "next build && next export",
     "start": "next start",
     "lint": "next lint"
   },
@@ -34,3 +34,4 @@
     "@types/react-swipeable-views": "^0.13.1"
   }
 }
+
