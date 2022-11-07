@@ -8,7 +8,7 @@
   },
   "scripts": {
     "dev": "next dev",
-    "build": "next build && next export",
+    "build": "next build && next export && touch ./out/.nojekyll && echo 'https://alexandrelam.github.io/ducktape/' > ./out/CNAME",
     "start": "next start",
     "lint": "next lint"
   },
