@@ -25,7 +25,10 @@ export function Camera() {
     handleCancel,
   } = useCamera();
 
-  const [isFrontCamera, setIsFrontCamera] = useState(true);
+  const [isFrontCamera, setIsFrontCamera] = useState(
+    localStorage.getItem("isFrontCamera") === "true"
+  );
+
   const [backdropLoadingOpen, setBackdropLoadingOpen] = useState(false);
 
   const videoConstraints = {
@@ -36,6 +39,7 @@ export function Camera() {
 
   function flipCamera() {
     setIsFrontCamera(!isFrontCamera);
+    localStorage.setItem("isFrontCamera", (!isFrontCamera).toString());
   }
 
   function getVideoUrl() {
@@ -80,8 +84,18 @@ export function Camera() {
           />
         )}
         <ButtonWrapper>
-          {!capturing && recordedChunks.length > 0 ? (
+          {recordedChunks.length > 0 ? (
             <StyledButton
+              onClick={handleUpload}
+              variant="contained"
+              // @ts-ignore
+              component="label"
+            >
+              <FileUploadIcon />
+            </StyledButton>
+          ) : null}
+          {!capturing && recordedChunks.length > 0 ? (
+            <Button
               variant="contained"
               color="error"
               // @ts-ignore
@@ -89,7 +103,7 @@ export function Camera() {
               onClick={handleCancel}
             >
               <CancelIcon />
-            </StyledButton>
+            </Button>
           ) : null}
           {!capturing && recordedChunks.length === 0 ? (
             <StyledButton
@@ -102,15 +116,6 @@ export function Camera() {
             </StyledButton>
           ) : null}
           {capturing ? <CountdownButton /> : null}
-          {recordedChunks.length > 0 && (
-            <Button
-              onClick={handleUpload}
-              variant="contained"
-              component="label"
-            >
-              <FileUploadIcon />
-            </Button>
-          )}
         </ButtonWrapper>
       </Wrapper>
     </>
