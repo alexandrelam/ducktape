@@ -47,7 +47,10 @@ async function deleteExpiredVideos(videos: Video[]) {
     const storage = getStorage();
     await deleteObject(ref(storage, video.path));
     await updateDoc(doc(db, "users", video.authorUid), {
-      videos: arrayRemove(video),
+      videos: arrayRemove({
+        path: video.path,
+        createdAt: video.createdAt,
+      }),
     });
   });
 
