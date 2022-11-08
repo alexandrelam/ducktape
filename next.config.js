@@ -20,6 +20,9 @@ const nextConfig = withPWA({
     APP_ID: process.env.APP_ID,
     MEASUREMENT_ID: process.env.MEASUREMENT_ID,
   },
+  images: {
+    unoptimized: true,
+  },
 });
 
 module.exports = nextConfig;
