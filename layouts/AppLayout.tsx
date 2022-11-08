@@ -1,10 +1,20 @@
 import Head from "next/head";
+import { useEffect } from "react";
 
 type Props = {
   children: React.ReactNode;
 };
 
 export function AppLayout({ children }: Props) {
+  useEffect(() => {
+    const documentHeight = () => {
+      const doc = document.documentElement;
+      doc.style.setProperty("--doc-height", `${window.innerHeight}px`);
+    };
+    window.addEventListener("resize", documentHeight);
+    documentHeight();
+  }, []);
+
   return (
     <>
       <Head>

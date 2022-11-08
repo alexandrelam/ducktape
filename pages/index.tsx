@@ -35,7 +35,7 @@ export default function Home() {
   const [videoLoading, setVideoLoading] = useState(true);
 
   const swipeableStyles = {
-    height: "90vh",
+    height: "calc(var(--doc-height) - 56px)",
     WebkitOverflowScrolling: "touch", // iOS momentum scrolling
   };
 
@@ -112,5 +112,6 @@ const Wrapper = styled.div`
   position: relative;
   display: flex;
   flex-direction: column;
+  height: 100%;
 `;
 
