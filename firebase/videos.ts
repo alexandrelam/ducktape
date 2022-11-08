@@ -89,6 +89,7 @@ export async function deleteVideo(
 
   const v = {
     createdAt: videoToDelete.createdAt,
+    isFrontCamera: videoToDelete.isFrontCamera,
     path: videoToDelete.path,
   };
   try {
