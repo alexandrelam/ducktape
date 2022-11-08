@@ -1,4 +1,4 @@
-import { Store } from "../pages/index";
+import { Store } from "../pages/_app";
 import { useContext } from "react";
 
 export function useStore() {

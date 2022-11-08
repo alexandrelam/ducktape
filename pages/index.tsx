@@ -1,38 +1,25 @@
 import styled from "@emotion/styled";
 import { Navbar } from "../components/Navbar";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Feed } from "../components/Feed";
 import { Settings } from "../components/Settings";
 import { Camera } from "../components/Camera";
 import SwipeableViews from "react-swipeable-views";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../firebase/config";
-import { Video } from "../types/Video";
 import { fetchFeed } from "../firebase/videos";
-import { createContext } from "react";
-import type { User as FirebaseUser } from "firebase/auth";
 import CircularProgress from "@mui/material/CircularProgress";
 import { FeedLoading } from "../components/FeedLoading";
 import { useRouter } from "next/router";
 import { ToastContainer } from "react-toastify";
-
-type ContextProps = {
-  user: FirebaseUser;
-  page: number;
-  setPage: (page: number) => void;
-  videos: Video[];
-  setVideos: (videos: Video[]) => void;
-  setVideoLoading: (loading: boolean) => void;
-};
-
-export const Store = createContext<ContextProps | null>(null);
+import { useStore } from "../hooks/useStore";
 
 export default function Home() {
   const router = useRouter();
-  const [page, setPage] = useState(1);
   const [user, loading, error] = useAuthState(auth);
-  const [videos, setVideos] = useState<Video[]>([]);
-  const [videoLoading, setVideoLoading] = useState(true);
+
+  const { page, setPage, setVideos, videoLoading, setVideoLoading } =
+    useStore();
 
   const swipeableStyles = {
     height: "calc(var(--doc-height) - 56px)",
@@ -65,9 +52,7 @@ export default function Home() {
   }
 
   return (
-    <Store.Provider
-      value={{ user, page, setPage, videos, setVideos, setVideoLoading }}
-    >
+    <>
       <Wrapper>
         <Container>
           <SwipeableViews
@@ -86,7 +71,7 @@ export default function Home() {
         </NavBarPosition>
       </Wrapper>
       <ToastContainer autoClose={1000} />
-    </Store.Provider>
+    </>
   );
 }
 
