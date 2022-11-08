@@ -8,3 +8,7 @@
   opacity: 1;
   scale: 1;
 }
+
+.video.mirrored {
+  transform: scaleX(-1);
+}

@@ -47,32 +47,36 @@ export const useCamera = () => {
     [setRecordedChunks]
   );
 
-  const handleFirebaseUpload = useCallback(async () => {
-    if (recordedChunks.length) {
-      const blob = new Blob(recordedChunks, {
-        type: "video/webm",
-      });
-
-      try {
-        const title = `${new Date().toISOString()}.webm`;
-        const storage = getStorage();
-        const storageRef = ref(storage, title);
-
-        await updateDoc(doc(db, "users", user!.uid), {
-          videos: arrayUnion({
-            path: title,
-            createdAt: new Date().toISOString(),
-          }),
+  const handleFirebaseUpload = useCallback(
+    async (isFrontCamera: boolean) => {
+      if (recordedChunks.length) {
+        const blob = new Blob(recordedChunks, {
+          type: "video/webm",
         });
 
-        // 'file' comes from the Blob or File API
-        await uploadBytes(storageRef, blob);
-        setRecordedChunks([]);
-      } catch (e) {
-        console.log(e);
+        try {
+          const title = `${new Date().toISOString()}.webm`;
+          const storage = getStorage();
+          const storageRef = ref(storage, title);
+
+          await updateDoc(doc(db, "users", user!.uid), {
+            videos: arrayUnion({
+              path: title,
+              isFrontCamera,
+              createdAt: new Date().toISOString(),
+            }),
+          });
+
+          // 'file' comes from the Blob or File API
+          await uploadBytes(storageRef, blob);
+          setRecordedChunks([]);
+        } catch (e) {
+          console.log(e);
+        }
       }
-    }
-  }, [recordedChunks]);
+    },
+    [recordedChunks]
+  );
 
   const handleCancel = useCallback(() => {
     setRecordedChunks([]);

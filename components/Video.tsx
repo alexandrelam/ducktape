@@ -3,9 +3,10 @@ import { useState, useEffect } from "react";
 
 type Props = {
   videoUrl: string;
+  isFrontCamera: boolean;
 };
 
-export function Video({ videoUrl }: Props) {
+export function Video({ videoUrl, isFrontCamera }: Props) {
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
@@ -21,7 +22,9 @@ export function Video({ videoUrl }: Props) {
       autoPlay
       muted
       loop
-      className={`${styles.video} ${isMounted && styles.visible}`}
+      className={`${styles.video} ${isMounted && styles.visible} ${
+        isFrontCamera && styles.mirrored
+      }`}
     >
       <source src={videoUrl} type="video/webm" />
     </video>

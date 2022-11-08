@@ -1,6 +1,7 @@
 import styled from "@emotion/styled";
 import { useState } from "react";
 import Webcam from "react-webcam";
+import { Video } from "./Video";
 import Button from "@mui/material/Button";
 import PhotoCamera from "@mui/icons-material/PhotoCamera";
 import FlipCameraAndroidIcon from "@mui/icons-material/FlipCameraAndroid";
@@ -54,7 +55,7 @@ export function Camera() {
   async function handleUpload() {
     setVideoLoading(true);
     setBackdropLoadingOpen(true);
-    await handleFirebaseUpload();
+    await handleFirebaseUpload(isFrontCamera);
     setBackdropLoadingOpen(false);
     const v = await fetchFeed(user!);
     setVideos(v);
@@ -75,7 +76,7 @@ export function Camera() {
           <FlipCameraAndroidIcon />
         </FlipCameraButton>
         {!capturing && recordedChunks.length > 0 ? (
-          <video src={getVideoUrl()} autoPlay loop />
+          <Video videoUrl={getVideoUrl()} isFrontCamera={isFrontCamera} />
         ) : (
           <Webcam
             audio={false}
