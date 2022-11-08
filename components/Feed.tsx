@@ -49,7 +49,7 @@ export function Feed() {
               <DeleteIcon />
             </StyledIconButton>
           ) : null}
-          <Video videoUrl={video.url} />
+          <Video videoUrl={video.url} isFrontCamera={video.isFrontCamera} />
         </Overlay>
       ))}
     </FeedContainer>

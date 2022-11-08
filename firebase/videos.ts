@@ -49,6 +49,7 @@ async function deleteExpiredVideos(videos: Video[]) {
     await updateDoc(doc(db, "users", video.authorUid), {
       videos: arrayRemove({
         path: video.path,
+        isFrontCamera: video.isFrontCamera,
         createdAt: video.createdAt,
       }),
     });
