@@ -1,4 +1,5 @@
 import Button from "@mui/material/Button";
+import Image from "next/image";
 import { useState } from "react";
 import styled from "@emotion/styled";
 import { useRouter } from "next/router";
@@ -27,9 +28,21 @@ export default function login() {
 
   return (
     <Container>
-      <Button variant="contained" size="large" onClick={handleLogin}>
-        Se connecter avec Google
-      </Button>
+      <Image
+        src="/icon-384x384.png"
+        alt="login illustration"
+        width={200}
+        height={200}
+      />
+      <BottomWrapper>
+        <TextWrapper>
+          <Title>Ducktape</Title>
+          <SubTitle>Share 2 seconds daily videos with your friends!</SubTitle>
+        </TextWrapper>
+        <LoginButton variant="contained" size="large" onClick={handleLogin}>
+          Se connecter avec Google
+        </LoginButton>
+      </BottomWrapper>
       <Backdrop sx={{ color: "#fff", zIndex: 200 }} open={open}>
         <CircularProgress color="inherit" />
       </Backdrop>
@@ -37,9 +50,46 @@ export default function login() {
   );
 }
 
+const BottomWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3rem;
+`;
+
+const LoginButton = styled(Button)`
+  background-color: #2c542b;
+  width: 100%;
+  height: 4rem;
+  color: #b5e3b4;
+`;
+
+const TextWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.2rem;
+`;
+
+const Title = styled.h1`
+  color: #2c542b;
+  margin: 0;
+  font-size: 3rem;
+`;
+
+const SubTitle = styled.span`
+  color: #2c542b;
+  font-size: 1.2rem;
+`;
+
 const Container = styled.div`
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  justify-content: space-around;
   align-items: center;
-  height: 90vh;
+  height: var(--doc-height);
+  background-color: #5ac161;
+  padding: 0 3rem;
+  padding-top: 5rem;
 `;
