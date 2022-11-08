@@ -2,14 +2,11 @@ import TextField from "@mui/material/TextField";
 import styled from "@emotion/styled";
 import Button from "@mui/material/Button";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
-import { arrayUnion, doc, updateDoc } from "firebase/firestore";
-import { getDoc } from "firebase/firestore";
-import { db } from "../firebase/config";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useState } from "react";
 import { auth } from "../firebase/config";
 import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { addFriend } from "../firebase/friends";
 
 type Props = {
   fetchFriends: () => Promise<void>;
@@ -21,17 +18,6 @@ export function AddFriend({ fetchFriends }: Props) {
 
   const notifySuccess = () => toast.success("Ami ajouté");
   const notifyError = () => toast.error("L'utilisateur n'existe pas");
-
-  async function addFriend(userUid: string, friendUid: string) {
-    const friendDoc = await getDoc(doc(db, "users", friendUid));
-    await updateDoc(doc(db, "users", userUid), {
-      friends: arrayUnion({
-        uid: friendUid,
-        name: friendDoc.data()?.name,
-        photoURL: friendDoc.data()?.photoURL,
-      }),
-    });
-  }
 
   async function handleAddFriend() {
     if (user) {

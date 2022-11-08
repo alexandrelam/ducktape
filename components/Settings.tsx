@@ -27,6 +27,14 @@ export function Settings() {
     setFriends(userDoc.data()?.friends);
   }
 
+  async function shareAddFriend() {
+    await navigator.share({
+      title: "Invitez vos amis sur Ducktape",
+      text: "Envoyez ce lien à vos amis pour les inviter sur Ducktape",
+      url: "https://alexandrelam.github.io/ducktape/invite?code=" + user!.uid,
+    });
+  }
+
   useEffect(() => {
     fetchFriends();
   }, []);
@@ -47,6 +55,7 @@ export function Settings() {
         <span>{user.displayName}</span>
       </ProfileWrapper>
       <UserUid />
+      <Button onClick={shareAddFriend}>Envoyer un lien d'invitation</Button>
       <h2>Amis</h2>
       <AddFriend fetchFriends={fetchFriends} />
       <FriendList friends={friends} fetchFriends={fetchFriends} />

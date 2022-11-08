@@ -14,6 +14,14 @@ export default function login() {
     setOpen(true);
     await signInWithGoogle();
     setOpen(false);
+    const redirect = router.query.redirect as string;
+    const code = router.query.code as string;
+
+    if (code && redirect) {
+      router.push(redirect + "?code=" + code);
+      return;
+    }
+
     router.push("/");
   }
 

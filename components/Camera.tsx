@@ -12,9 +12,12 @@ import { useStore } from "../hooks/useStore";
 import { CountdownButton } from "./CountdownButton";
 import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth } from "../firebase/config";
 
 export function Camera() {
-  const { user, setVideos, setVideoLoading, setPage } = useStore();
+  const { setVideos, setVideoLoading, setPage } = useStore();
+  const [user] = useAuthState(auth);
 
   const {
     webcamRef,
@@ -53,7 +56,7 @@ export function Camera() {
     setBackdropLoadingOpen(true);
     await handleFirebaseUpload();
     setBackdropLoadingOpen(false);
-    const v = await fetchFeed(user);
+    const v = await fetchFeed(user!);
     setVideos(v);
     setVideoLoading(false);
     setPage(1);

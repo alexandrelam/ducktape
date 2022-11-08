@@ -5,6 +5,8 @@ import { deleteVideo } from "../firebase/videos";
 import { EmptyFeed } from "./EmptyFeed";
 import { useStore } from "../hooks/useStore";
 import { Video } from "../types/Video";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth } from "../firebase/config";
 
 function dateToTime(date: Date) {
   return date.toLocaleTimeString("fr-FR", {
@@ -14,7 +16,8 @@ function dateToTime(date: Date) {
 }
 
 export function Feed() {
-  const { user, videos, setVideos, setPage } = useStore();
+  const [user] = useAuthState(auth);
+  const { videos, setVideos, setPage } = useStore();
   if (videos.length === 0) {
     return <EmptyFeed setPage={setPage} />;
   }
@@ -33,13 +36,13 @@ export function Feed() {
             <OverlayText>{video.author}</OverlayText>
             <OverlayText>{dateToTime(new Date(video.createdAt))}</OverlayText>
           </OverlayTextWrapper>
-          {user.uid === video.authorUid ? (
+          {user!.uid === video.authorUid ? (
             <StyledIconButton
               aria-label="delete"
               size="large"
               onClick={() => {
                 setVideos(videos.filter((v) => v.url !== video.url));
-                deleteVideo(user, videos, video);
+                deleteVideo(user!, videos, video);
               }}
             >
               <DeleteIcon />
