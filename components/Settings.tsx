@@ -11,11 +11,14 @@ import { useEffect, useState } from "react";
 import { User } from "../types/User";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../firebase/config";
+import RenameModal from "./RenameModal";
 
 export function Settings() {
   const router = useRouter();
   const [user, error] = useAuthState(auth);
+  const [userName, setUserName] = useState("loading...");
   const [friends, setFriends] = useState<User[]>([]);
+  const [renameModalOpen, setRenameModalOpen] = useState(false);
 
   function handleLogout() {
     logout();
@@ -25,6 +28,11 @@ export function Settings() {
   async function fetchFriends() {
     const userDoc = await getDoc(doc(db, "users", user!.uid));
     setFriends(userDoc.data()?.friends);
+  }
+
+  async function fetchName() {
+    const userDoc = await getDoc(doc(db, "users", user!.uid));
+    setUserName(userDoc.data()?.name);
   }
 
   async function shareAddFriend() {
@@ -37,6 +45,7 @@ export function Settings() {
 
   useEffect(() => {
     fetchFriends();
+    fetchName();
   }, []);
 
   if (error)
@@ -52,19 +61,35 @@ export function Settings() {
         {user.photoURL ? (
           <ProfilePicture src={user.photoURL} alt="profile picture" />
         ) : null}
-        <span>{user.displayName}</span>
+        <span>{userName}</span>
       </ProfileWrapper>
       <UserUid />
       <Button onClick={shareAddFriend}>Envoyer un lien d'invitation</Button>
       <h2>Amis</h2>
       <AddFriend fetchFriends={fetchFriends} />
       <FriendList friends={friends} fetchFriends={fetchFriends} />
-      <Button color="error" onClick={handleLogout}>
-        Se déconnecter
-      </Button>
+      <ButtonWrapper>
+        <Button variant="outlined" onClick={() => setRenameModalOpen(true)}>
+          Changer de nom
+        </Button>
+        <Button color="error" variant="outlined" onClick={handleLogout}>
+          Se déconnecter
+        </Button>
+      </ButtonWrapper>
+      <RenameModal
+        open={renameModalOpen}
+        handleClose={() => setRenameModalOpen(false)}
+      />
     </Container>
   );
 }
+
+const ButtonWrapper = styled.div`
+  margin-top: 3rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+`;
 
 const Container = styled.div`
   display: flex;
