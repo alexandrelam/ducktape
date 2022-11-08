@@ -19,7 +19,12 @@ export function AppLayout({ children }: Props) {
     <>
       <Head>
         <title>DuckTape 🦆</title>
-        <meta name="description" content="Next.js App" />
+        <meta
+          name="description"
+          content="Share 2 seconds videos /w your friends"
+        />
+        <meta name="author" content="Alexandre Lam" />
+        <meta name="keyword" content="🦆" />
         <link rel="icon" href="/ducktape/favicon.ico" />
       </Head>
       {children}
