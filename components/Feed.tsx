@@ -4,9 +4,10 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { deleteVideo } from "../firebase/videos";
 import { EmptyFeed } from "./EmptyFeed";
 import { useStore } from "../hooks/useStore";
-import { Video } from "../types/Video";
+import { Video as VideoType } from "../types/Video";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../firebase/config";
+import { Video } from "./Video";
 
 function dateToTime(date: Date) {
   return date.toLocaleTimeString("fr-FR", {
@@ -22,7 +23,7 @@ export function Feed() {
     return <EmptyFeed setPage={setPage} />;
   }
 
-  const sortedVideos = videos.sort((a: Video, b: Video) => {
+  const sortedVideos = videos.sort((a: VideoType, b: VideoType) => {
     const aDate = new Date(a.createdAt);
     const bDate = new Date(b.createdAt);
     return bDate.getTime() - aDate.getTime();
@@ -48,9 +49,7 @@ export function Feed() {
               <DeleteIcon />
             </StyledIconButton>
           ) : null}
-          <Video autoPlay muted loop>
-            <source src={video.url} type="video/webm" />
-          </Video>
+          <Video videoUrl={video.url} />
         </Overlay>
       ))}
     </FeedContainer>
@@ -63,10 +62,6 @@ const FeedContainer = styled.div`
   align-items: center;
   max-width: 666px;
   margin: auto;
-`;
-
-const Video = styled.video`
-  width: 100%;
 `;
 
 const StyledIconButton = styled(IconButton)`
@@ -86,6 +81,7 @@ const OverlayTextWrapper = styled.div`
   position: absolute;
   margin-left: 1rem;
   margin-top: 1rem;
+  z-index: 100;
 `;
 
 const OverlayText = styled.h2`
