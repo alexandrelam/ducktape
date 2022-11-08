@@ -1,0 +1,10 @@
+.video {
+  opacity: 0;
+  scale: 0.8;
+  transition: opacity 0.8s ease, scale 0.8s ease;
+}
+
+.video.visible {
+  opacity: 1;
+  scale: 1;
+}
