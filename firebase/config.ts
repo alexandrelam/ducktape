@@ -2,8 +2,8 @@
 import { initializeApp } from "firebase/app";
 import {
   getAuth,
-  signInWithPopup,
   GoogleAuthProvider,
+  signInWithRedirect,
   signOut,
 } from "firebase/auth";
 import {
@@ -39,8 +39,9 @@ const db = getFirestore(app);
 
 const signInWithGoogle = async () => {
   try {
-    const res = await signInWithPopup(auth, googleProvider);
-    const user = res.user;
+    const res = await signInWithRedirect(auth, googleProvider);
+    console.log(res);
+    const user = null as any;
     const q = query(collection(db, "users"), where("uid", "==", user.uid));
     const docs = await getDocs(q);
     if (docs.docs.length === 0) {
