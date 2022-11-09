@@ -85,7 +85,9 @@
 
 ## About The Project
 
-![demo-compress](https://user-images.githubusercontent.com/25727549/200730673-704c731d-0c78-473b-9324-41ae933d478e.gif)
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/25727549/200730673-704c731d-0c78-473b-9324-41ae933d478e.gif">
+</p>
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -129,13 +131,17 @@
 
 You can install the pwa version of the app by adding it to the home screen using your web browser.
 
-![install-compress](https://user-images.githubusercontent.com/25727549/200731349-2252754f-6150-4d25-9057-fae3106b9bf6.gif)
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/25727549/200731349-2252754f-6150-4d25-9057-fae3106b9bf6.gif">
+</p>
 
 ### Add friends
 
 The best way to add friends is by sharing your link.
 
-![addfriends-compress](https://user-images.githubusercontent.com/25727549/200731820-ccce9296-88be-4b87-bd73-a9d18858a4ac.gif)
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/25727549/200731820-ccce9296-88be-4b87-bd73-a9d18858a4ac.gif">
+</p>
 
 <!-- ROADMAP -->
 
