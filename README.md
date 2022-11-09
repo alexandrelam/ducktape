@@ -66,7 +66,13 @@
         <li><a href="#installation">Installation</a></li>
       </ul>
     </li>
-    <li><a href="#usage">Usage</a></li>
+    <li>
+      <a href="#usage">Usage</a>
+      <ul>
+        <li href="install-the-pwa">Install the pwa</li>
+        <li href="add-friends">Add friends</li>
+      </ul>
+    </li>
     <li><a href="#roadmap">Roadmap</a></li>
     <li><a href="#contributing">Contributing</a></li>
     <li><a href="#license">License</a></li>
@@ -79,7 +85,7 @@
 
 ## About The Project
 
-![screenshot](https://user-images.githubusercontent.com/25727549/200225286-89345481-0ba9-411a-a2a9-4d5b2432d844.png)
+![demo-compress](https://user-images.githubusercontent.com/25727549/200730673-704c731d-0c78-473b-9324-41ae933d478e.gif)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -116,6 +122,20 @@
 4. Enter your firebase secrets in `.env.local`
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+## Usage
+
+### Install the PWA
+
+You can install the pwa version of the app by adding it to the home screen using your web browser.
+
+![install-compress](https://user-images.githubusercontent.com/25727549/200731349-2252754f-6150-4d25-9057-fae3106b9bf6.gif)
+
+### Add friends
+
+The best way to add friends is by sharing your link.
+
+![addfriends-compress](https://user-images.githubusercontent.com/25727549/200731820-ccce9296-88be-4b87-bd73-a9d18858a4ac.gif)
 
 <!-- ROADMAP -->
 
