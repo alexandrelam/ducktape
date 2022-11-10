@@ -17,13 +17,17 @@ async function getVideosFromUser(userUid: string) {
   const videos = userDoc.data()?.videos;
   await Promise.all(
     videos.map(async (video: Video) => {
-      const url = await getDownloadURL(ref(storage, video.path));
-      v.push({
-        ...video,
-        url,
-        author: userDoc.data()?.name || "",
-        authorUid: userDoc.id,
-      });
+      try {
+        const url = await getDownloadURL(ref(storage, video.path));
+        v.push({
+          ...video,
+          url,
+          author: userDoc.data()?.name || "",
+          authorUid: userDoc.id,
+        });
+      } catch (error) {
+        console.log(error);
+      }
     })
   );
   return v;
