@@ -55,7 +55,8 @@ export const useCamera = () => {
         });
 
         try {
-          const title = `${new Date().toISOString()}.webm`;
+          const date = new Date().toISOString;
+          const title = `${date}.webm`;
           const storage = getStorage();
           const storageRef = ref(storage, title);
 
@@ -63,7 +64,7 @@ export const useCamera = () => {
             videos: arrayUnion({
               path: title,
               isFrontCamera,
-              createdAt: new Date().toISOString(),
+              createdAt: date;
             }),
           });
 
