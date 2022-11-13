@@ -64,7 +64,7 @@ export const useCamera = () => {
             videos: arrayUnion({
               path: title,
               isFrontCamera,
-              createdAt: date;
+              createdAt: date,
             }),
           });
 
