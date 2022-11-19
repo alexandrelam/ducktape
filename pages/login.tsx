@@ -29,7 +29,7 @@ export default function login() {
 
   async function handleLogin() {
     setOpen(true);
-    await signInWithGoogle();
+    window.location.replace("http://localhost:4000/api/v1/auth/google");
   }
 
   return (

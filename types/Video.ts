@@ -1,8 +1,11 @@
 export type Video = {
-  path: string;
-  url: string;
-  author: string;
+  id: number;
+  filepath: string;
   isFrontCamera: boolean;
-  authorUid: string;
-  createdAt: string;
+  lastModifiedDate: string;
+  mimetype: string;
+  newFilename: string;
+  originalFilename: string;
+  size: number;
+  userId: number;
 };

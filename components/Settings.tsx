@@ -44,8 +44,8 @@ export function Settings() {
   }
 
   useEffect(() => {
-    fetchFriends();
-    fetchName();
+    // fetchFriends();
+    // fetchName();
   }, []);
 
   if (error)

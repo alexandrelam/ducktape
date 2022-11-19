@@ -13,37 +13,27 @@ import { FeedLoading } from "../components/FeedLoading";
 import { useRouter } from "next/router";
 import { ToastContainer } from "react-toastify";
 import { useStore } from "../hooks/useStore";
+import { useMe } from "../api/useMe";
 
 export default function Home() {
   const router = useRouter();
-  const [user, loading, error] = useAuthState(auth);
+  const { user, isLoading } = useMe();
 
-  const { page, setPage, setVideos, videoLoading, setVideoLoading } =
-    useStore();
+  const { page, setPage } = useStore();
+
+  useEffect(() => {
+    if (isLoading) return;
+    if (!user) {
+      router.push("/login");
+    }
+  }, [user, isLoading]);
 
   const swipeableStyles = {
     height: "calc(var(--doc-height) - 56px)",
     WebkitOverflowScrolling: "touch", // iOS momentum scrolling
   };
 
-  useEffect(() => {
-    if (loading) return;
-    if (!user) {
-      router.push("/login");
-      return;
-    }
-    (async () => {
-      const v = await fetchFeed(user!);
-      setVideos(v);
-      setVideoLoading(false);
-    })();
-  }, [user, loading]);
-
-  if (error) {
-    return <h1>Couldn't fetch user</h1>;
-  }
-
-  if (!user || loading) {
+  if (!user || isLoading) {
     return (
       <LoadingWrapper>
         <CircularProgress />
@@ -62,7 +52,7 @@ export default function Home() {
             containerStyle={swipeableStyles}
           >
             <Camera />
-            {videoLoading ? <FeedLoading /> : <Feed />}
+            <Feed />
             <Settings />
           </SwipeableViews>
         </Container>

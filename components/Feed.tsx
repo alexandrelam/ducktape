@@ -8,6 +8,10 @@ import { Video as VideoType } from "../types/Video";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../firebase/config";
 import { Video } from "./Video";
+import { useEffect } from "react";
+import { useFeed } from "../api/useFeed";
+import { useMe } from "../api/useMe";
+import { FeedLoading } from "./FeedLoading";
 
 function dateToTime(date: Date) {
   return date.toLocaleTimeString("fr-FR", {
@@ -17,39 +21,45 @@ function dateToTime(date: Date) {
 }
 
 export function Feed() {
-  const [user] = useAuthState(auth);
-  const { videos, setVideos, setPage } = useStore();
-  if (videos.length === 0) {
-    return <EmptyFeed setPage={setPage} />;
+  const { user } = useMe();
+  const { feed, isLoading } = useFeed(user ? user.id : null);
+
+  if (isLoading || !feed) {
+    return <FeedLoading />;
   }
 
-  const sortedVideos = videos.sort((a: VideoType, b: VideoType) => {
-    const aDate = new Date(a.createdAt);
-    const bDate = new Date(b.createdAt);
+  const sortedFeed = feed.sort((a: VideoType, b: VideoType) => {
+    const aDate = new Date(a.lastModifiedDate);
+    const bDate = new Date(b.lastModifiedDate);
     return bDate.getTime() - aDate.getTime();
   });
 
   return (
     <FeedContainer>
-      {sortedVideos.map((video) => (
-        <Overlay key={video.url}>
+      {sortedFeed.map((video) => (
+        <Overlay key={video.id}>
           <OverlayTextWrapper>
-            <OverlayText>{video.author}</OverlayText>
-            <OverlayText>{dateToTime(new Date(video.createdAt))}</OverlayText>
+            <OverlayText>test</OverlayText>
+            <OverlayText>
+              {dateToTime(new Date(video.lastModifiedDate))}
+            </OverlayText>
           </OverlayTextWrapper>
-          {user!.uid === video.authorUid ? (
+          {user.id === video.userId ? (
             <StyledIconButton
               aria-label="delete"
               size="large"
               onClick={() => {
-                setVideos(videos.filter((v) => v.url !== video.url));
-                deleteVideo(user!, videos, video);
+                console.log("delete");
               }}
             >
               <DeleteIcon />
             </StyledIconButton>
           ) : null}
-          <Video videoUrl={video.url} isFrontCamera={video.isFrontCamera} />
+          <Video
+            videoUrl={`http://localhost:4000/${video.newFilename}`}
+            isFrontCamera={video.isFrontCamera}
+          />
+          <img src={`http://localhost:4000/${video.newFilename}`} />
         </Overlay>
       ))}
     </FeedContainer>
