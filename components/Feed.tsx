@@ -32,7 +32,7 @@ function dateToTime(date: Date) {
 
 export function Feed() {
   const { user } = useMe();
-  const { feed, isLoading } = useFeed(user ? user.id : null);
+  const { feed, isLoading } = useFeed();
 
   if (isLoading || !feed) {
     return <FeedLoading />;

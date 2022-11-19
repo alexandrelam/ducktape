@@ -1,17 +1,10 @@
-import { useEffect, useState } from "react";
 import useSWR from "swr";
 import { User } from "../types/User";
-import { decryptJwt, getCookie } from "../utils/cookie";
 import { fetcher } from "./fetcher";
+import { useGuard } from "./useGuard";
 
 export function useMe() {
-  const [user, setUser] = useState<User | null>(null);
-
-  useEffect(() => {
-    const jwt = getCookie("token");
-    const decrypt = jwt ? decryptJwt(jwt) : null;
-    setUser(decrypt.user);
-  }, []);
+  const { user } = useGuard();
 
   const { data, error } = useSWR(
     user ? `/api/v1/users/${user.id}` : null,

@@ -1,10 +1,13 @@
 import useSWR from "swr";
 import { Video } from "../types/Video";
 import { fetcher } from "./fetcher";
+import { useGuard } from "./useGuard";
 
-export function useFeed(userId: number | null) {
+export function useFeed() {
+  const { user } = useGuard();
+
   const { data, error } = useSWR(
-    userId ? `/api/v1/users/${userId}/videos` : null,
+    user ? `/api/v1/users/${user.id}/videos` : null,
     fetcher
   );
 
