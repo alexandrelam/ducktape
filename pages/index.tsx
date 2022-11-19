@@ -6,7 +6,6 @@ import { Settings } from "../components/Settings";
 import { Camera } from "../components/Camera";
 import SwipeableViews from "react-swipeable-views";
 import CircularProgress from "@mui/material/CircularProgress";
-import { FeedLoading } from "../components/FeedLoading";
 import { useRouter } from "next/router";
 import { ToastContainer } from "react-toastify";
 import { useStore } from "../hooks/useStore";
