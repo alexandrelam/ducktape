@@ -39,7 +39,7 @@ export function Feed() {
       {sortedFeed.map((video) => (
         <Overlay key={video.id}>
           <OverlayTextWrapper>
-            <OverlayText>test</OverlayText>
+            <OverlayText>{user.name}</OverlayText>
             <OverlayText>
               {dateToTime(new Date(video.lastModifiedDate))}
             </OverlayText>
@@ -59,7 +59,6 @@ export function Feed() {
             videoUrl={`http://localhost:4000/${video.newFilename}`}
             isFrontCamera={video.isFrontCamera}
           />
-          <img src={`http://localhost:4000/${video.newFilename}`} />
         </Overlay>
       ))}
     </FeedContainer>
