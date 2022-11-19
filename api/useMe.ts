@@ -14,7 +14,7 @@ export function useMe() {
   }, []);
 
   const { data, error } = useSWR(
-    user ? `http://localhost:4000/api/v1/users/${user.id}` : null,
+    user ? `/api/v1/users/${user.id}` : null,
     fetcher
   );
 

@@ -1,17 +1,27 @@
 import styled from "@emotion/styled";
 import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { deleteVideo } from "../firebase/videos";
-import { EmptyFeed } from "./EmptyFeed";
-import { useStore } from "../hooks/useStore";
 import { Video as VideoType } from "../types/Video";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { auth } from "../firebase/config";
 import { Video } from "./Video";
-import { useEffect } from "react";
 import { useFeed } from "../api/useFeed";
 import { useMe } from "../api/useMe";
 import { FeedLoading } from "./FeedLoading";
+import { User } from "../types/User";
+import { mutate } from "swr";
+import { getCookie } from "../utils/cookie";
+
+async function deleteVideo(user: User, video: VideoType) {
+  await fetch(
+    `${process.env.API_URL}/api/v1/users/${user.id}/videos/${video.id}`,
+    {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${getCookie("token")}`,
+      },
+    }
+  );
+  mutate(`/api/v1/users/${user.id}/videos`);
+}
 
 function dateToTime(date: Date) {
   return date.toLocaleTimeString("fr-FR", {
@@ -39,17 +49,19 @@ export function Feed() {
       {sortedFeed.map((video) => (
         <Overlay key={video.id}>
           <OverlayTextWrapper>
-            <OverlayText>{user.name}</OverlayText>
+            <OverlayText>
+              {user.name} {user.id} {video.userId}
+            </OverlayText>
             <OverlayText>
               {dateToTime(new Date(video.lastModifiedDate))}
             </OverlayText>
           </OverlayTextWrapper>
-          {user.id === video.userId ? (
+          {user.id == video.userId ? (
             <StyledIconButton
               aria-label="delete"
               size="large"
-              onClick={() => {
-                console.log("delete");
+              onClick={async () => {
+                await deleteVideo(user, video);
               }}
             >
               <DeleteIcon />

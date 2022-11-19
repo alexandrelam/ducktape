@@ -3,9 +3,6 @@ import styled from "@emotion/styled";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import CheckIcon from "@mui/icons-material/Check";
-import { doc, updateDoc } from "firebase/firestore";
-import { auth, db } from "../firebase/config";
-import { useAuthState } from "react-firebase-hooks/auth";
 import { toast } from "react-toastify";
 
 type Props = {
@@ -14,24 +11,22 @@ type Props = {
 };
 
 export default function RenameModal({ open, handleClose }: Props) {
-  const [user] = useAuthState(auth);
-
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     // @ts-ignore
-    const newName = (e.target as HTMLFormElement).name.value;
+    // const newName = (e.target as HTMLFormElement).name.value;
 
-    if (newName.length > 0) {
-      try {
-        await updateDoc(doc(db, "users", user!.uid), {
-          name: newName,
-        });
-        toast.success("Votre nom a bien été modifié");
-        handleClose();
-      } catch (error) {
-        toast.error("Une erreur est survenue lors du changement de nom");
-      }
-    }
+    // if (newName.length > 0) {
+    //   try {
+    //     await updateDoc(doc(db, "users", user!.uid), {
+    //       name: newName,
+    //     });
+    //     toast.success("Votre nom a bien été modifié");
+    //     handleClose();
+    //   } catch (error) {
+    //     toast.error("Une erreur est survenue lors du changement de nom");
+    //   }
+    // }
   }
 
   return (

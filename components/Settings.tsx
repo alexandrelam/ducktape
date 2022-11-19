@@ -1,63 +1,36 @@
 import Button from "@mui/material/Button";
 import styled from "@emotion/styled";
-import { logout } from "../firebase/config";
 import { useRouter } from "next/router";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { auth } from "../firebase/config";
 import { UserUid } from "./UserUid";
 import { AddFriend } from "./AddFriend";
 import { FriendList } from "./FriendList";
 import { useEffect, useState } from "react";
 import { User } from "../types/User";
 import { doc, getDoc } from "firebase/firestore";
-import { db } from "../firebase/config";
 import RenameModal from "./RenameModal";
 
 export function Settings() {
   const router = useRouter();
-  const [user, error] = useAuthState(auth);
   const [userName, setUserName] = useState("loading...");
   const [friends, setFriends] = useState<User[]>([]);
   const [renameModalOpen, setRenameModalOpen] = useState(false);
 
   function handleLogout() {
-    logout();
     router.push("/login");
   }
 
-  async function fetchFriends() {
-    const userDoc = await getDoc(doc(db, "users", user!.uid));
-    setFriends(userDoc.data()?.friends);
-  }
-
-  async function fetchName() {
-    const userDoc = await getDoc(doc(db, "users", user!.uid));
-    setUserName(userDoc.data()?.name);
-  }
-
   async function shareAddFriend() {
-    await navigator.share({
-      title: "Invitez vos amis sur Ducktape",
-      text: "Envoyez ce lien à vos amis pour les inviter sur Ducktape",
-      url: "https://alexandrelam.github.io/ducktape/invite?code=" + user!.uid,
-    });
+    // await navigator.share({
+    //   title: "Invitez vos amis sur Ducktape",
+    //   text: "Envoyez ce lien à vos amis pour les inviter sur Ducktape",
+    //   url: "https://alexandrelam.github.io/ducktape/invite?code=" + user!.uid,
+    // });
   }
-
-  useEffect(() => {
-    // fetchFriends();
-    // fetchName();
-  }, []);
-
-  if (error)
-    return (
-      <div>Une erreur est surevenue lors du chargement de l'utilisateur</div>
-    );
-
-  if (!user) return <div>Loading...</div>;
 
   return (
     <Container>
-      <ProfileWrapper>
+      {/* <ProfileWrapper>
         {user.photoURL ? (
           <ProfilePicture src={user.photoURL} alt="profile picture" />
         ) : null}
@@ -79,7 +52,7 @@ export function Settings() {
       <RenameModal
         open={renameModalOpen}
         handleClose={() => setRenameModalOpen(false)}
-      />
+      /> */}
     </Container>
   );
 }

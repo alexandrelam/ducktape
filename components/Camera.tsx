@@ -59,7 +59,7 @@ export function Camera() {
     formData.append("video", new Blob(recordedChunks, { type: "video/webm" }));
     formData.append("isFrontCamera", isFrontCamera.toString());
 
-    await fetch(`http://localhost:4000/api/v1/users/${user.id}/videos`, {
+    await fetch(`${process.env.API_URL}/api/v1/users/${user.id}/videos`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${getCookie("token")}`,
@@ -67,7 +67,7 @@ export function Camera() {
       body: formData,
     });
 
-    mutate(`http://localhost:4000/api/v1/users/${user.id}/videos`);
+    mutate(`/api/v1/users/${user.id}/videos`);
 
     setRecordedChunks([]);
     setBackdropLoadingOpen(false);
