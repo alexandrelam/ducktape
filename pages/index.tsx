@@ -27,6 +27,12 @@ export default function Home() {
     if (!getCookie("token")) {
       router.push("/login");
     }
+
+    const invideCode = localStorage.getItem("inviteCode");
+    if (invideCode) {
+      localStorage.removeItem("inviteCode");
+      router.push("/invite?code=" + localStorage.getItem(invideCode));
+    }
   }, []);
 
   if (!user || isLoading) {

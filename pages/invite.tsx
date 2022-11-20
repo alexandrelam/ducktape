@@ -1,47 +1,59 @@
 import { useEffect } from "react";
 import styled from "@emotion/styled";
-import { useAuthState } from "react-firebase-hooks/auth";
 import { useRouter } from "next/router";
 import { useStore } from "../hooks/useStore";
 import { toast } from "react-toastify";
 import CircularProgress from "@mui/material/CircularProgress";
+import { useMe } from "../api/useMe";
+import axios from "../api/privateAxios";
+import { getCookie } from "../utils/cookie";
 
 export default function invite() {
+  const { user, isLoading } = useMe();
   const router = useRouter();
   const { setPage } = useStore();
 
-  // useEffect(() => {
-  //   if (loading) return;
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const code = urlParams.get("code");
 
-  //   const urlParams = new URLSearchParams(window.location.search);
-  //   const code = urlParams.get("code");
+    if (!code) {
+      router.push("/");
+      toast.error("Code invalide");
+      return;
+    }
 
-  //   if (!code) {
-  //     router.push("/");
-  //     toast.error("Code invalide");
-  //     return;
-  //   }
+    if (!getCookie("token")) {
+      localStorage.setItem("inviteCode", code);
+      const redirectLink = "/login?redirect=/invite" + "&code=" + code;
+      router.push(redirectLink);
 
-  //   if (!user) {
-  //     const redirectLink = "/login?redirect=/invite" + "&code=" + code;
-  //     router.push(redirectLink);
+      return;
+    }
 
-  //     return;
-  //   }
+    if (isLoading) return;
 
-  //   (async () => {
-  //     if (code) {
-  //       try {
-  //         await addFriend(user.uid, code);
-  //         await addFriend(code, user.uid);
-  //       } catch (error) {
-  //         toast.error("Votre amis n'a pas pu être ajouté");
-  //       }
-  //       setPage(2);
-  //       router.push("/");
-  //     }
-  //   })();
-  // }, [user, loading]);
+    if (!user) {
+      localStorage.setItem("inviteCode", code);
+      const redirectLink = "/login?redirect=/invite" + "&code=" + code;
+      router.push(redirectLink);
+
+      return;
+    }
+
+    (async () => {
+      if (code) {
+        try {
+          await axios(`/api/v1/users/${user.googleId}/friends/${code}`);
+          toast.success("Ami ajouté");
+        } catch (error) {
+          toast.error("Votre amis n'a pas pu être ajouté");
+        }
+        setPage(2);
+        router.push("/");
+      }
+    })();
+  }, [user, isLoading]);
 
   return (
     <Container>

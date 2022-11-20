@@ -21,7 +21,7 @@ export function Settings() {
     await navigator.share({
       title: "Invitez vos amis sur Ducktape",
       text: "Envoyez ce lien à vos amis pour les inviter sur Ducktape",
-      url: `${process.env.FRONT_URL}/invite?code=${user.googleId}`,
+      url: `/invite?code=${user.googleId}`,
     });
   }
 
