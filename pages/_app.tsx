@@ -10,18 +10,12 @@ import { Video } from "../types/Video";
 type ContextProps = {
   page: number;
   setPage: (page: number) => void;
-  videos: Video[];
-  setVideos: (videos: Video[]) => void;
-  videoLoading: boolean;
-  setVideoLoading: (loading: boolean) => void;
 };
 
 export const Store = createContext<ContextProps | null>(null);
 
 export default function App({ Component, pageProps }: AppProps) {
   const [page, setPage] = useState(1);
-  const [videos, setVideos] = useState<Video[]>([]);
-  const [videoLoading, setVideoLoading] = useState(true);
 
   const theme = createTheme({
     palette: {
@@ -36,10 +30,6 @@ export default function App({ Component, pageProps }: AppProps) {
       value={{
         page,
         setPage,
-        videos,
-        setVideos,
-        videoLoading,
-        setVideoLoading,
       }}
     >
       <ThemeProvider theme={theme}>
