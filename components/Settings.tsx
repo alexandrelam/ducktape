@@ -21,11 +21,12 @@ export function Settings() {
   }
 
   async function shareAddFriend() {
-    // await navigator.share({
-    //   title: "Invitez vos amis sur Ducktape",
-    //   text: "Envoyez ce lien à vos amis pour les inviter sur Ducktape",
-    //   url: "https://alexandrelam.github.io/ducktape/invite?code=" + user!.uid,
-    // });
+    await navigator.share({
+      title: "Invitez vos amis sur Ducktape",
+      text: "Envoyez ce lien à vos amis pour les inviter sur Ducktape",
+      url:
+        "https://alexandrelam.github.io/ducktape/invite?code=" + user.googleId,
+    });
   }
 
   if (!user || isLoading) return null;

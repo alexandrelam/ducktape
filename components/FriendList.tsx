@@ -43,7 +43,7 @@ export function FriendList() {
               src={friend.profilePicturePath}
             />
           </ListItemAvatar>
-          <ListItemText primary={friend.name} secondary={friend.id} />
+          <ListItemText primary={friend.name} secondary={friend.googleId} />
         </ListItem>
       ))}
     </List>

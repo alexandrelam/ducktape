@@ -6,11 +6,10 @@ import { useState } from "react";
 import { toast } from "react-toastify";
 import { useMe } from "../api/useMe";
 import { mutate } from "swr";
-import { getCookie } from "../utils/cookie";
 import axios from "../api/privateAxios";
 
 export function AddFriend() {
-  const [friendId, setFriendId] = useState<string>("");
+  const [friendGoogleId, setFriendGoogleId] = useState<string>("");
   const { user, isLoading } = useMe();
 
   const notifySuccess = () => toast.success("Ami ajouté");
@@ -20,7 +19,7 @@ export function AddFriend() {
     try {
       await axios({
         method: "PATCH",
-        url: `/api/v1/users/${user.id}/friends/${friendId}`,
+        url: `/api/v1/users/${user.googleId}/friends/${friendGoogleId}`,
       });
       mutate("/api/v1/users/" + user.id);
       notifySuccess();
@@ -37,8 +36,8 @@ export function AddFriend() {
         id="outlined-basic"
         label="UID Utilisateur"
         variant="outlined"
-        value={friendId}
-        onChange={(e) => setFriendId(e.target.value)}
+        value={friendGoogleId}
+        onChange={(e) => setFriendGoogleId(e.target.value)}
       />
       <Button variant="contained" onClick={handleAddFriend}>
         <PersonAddIcon />
