@@ -8,4 +8,5 @@ export type Video = {
   originalFilename: string;
   size: number;
   userId: number;
+  createdAt: string;
 };

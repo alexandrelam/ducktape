@@ -66,7 +66,7 @@ export function Feed() {
             </StyledIconButton>
           ) : null}
           <Video
-            videoUrl={`http://localhost:4000/${video.newFilename}`}
+            videoUrl={`${process.env.API_URL}/${video.newFilename}`}
             isFrontCamera={video.isFrontCamera}
           />
         </Overlay>

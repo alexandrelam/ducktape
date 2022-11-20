@@ -6,5 +6,6 @@ export const fetcher = async (url: string) => {
       Authorization: `Bearer ${getCookie("token")}`,
     },
   });
+
   return res.json();
 };

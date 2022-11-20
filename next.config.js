@@ -12,12 +12,9 @@ const nextConfig = withPWA({
   assetPrefix: process.env.NODE_ENV === "development" ? "" : "/ducktape/",
   basePath: process.env.NODE_ENV === "development" ? "" : "/ducktape",
   env: {
-    BASE_PATH:
-      process.env.NODE_ENV === "development"
-        ? "http://localhost:3000"
-        : "/ducktape",
-    API_URL:
-      process.env.NODE_ENV === "development" ? "http://localhost:4000" : "",
+    FRONT_URL:
+      process.env.NODE_ENV === "development" ? process.env.FRONT_URL : "",
+    API_URL: process.env.NODE_ENV === "development" ? process.env.API_URL : "",
   },
   images: {
     unoptimized: true,

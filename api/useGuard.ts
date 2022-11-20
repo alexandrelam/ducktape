@@ -11,12 +11,12 @@ export function useGuard() {
     const jwt = getCookie("token");
     const decrypt = jwt ? decryptJwt(jwt) : null;
     if (!decrypt) {
-      router.push("/login");
+      //router.push(`${process.env.API_URL}/api/v1/auth/google`);
       return;
     }
 
     if (decrypt.exp < Date.now() / 1000) {
-      router.push("/login");
+      //router.push(`${process.env.API_URL}/api/v1/auth/google`);
       return;
     }
 
