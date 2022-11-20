@@ -7,6 +7,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import { useMe } from "../api/useMe";
 import axios from "../api/privateAxios";
 import { getCookie } from "../utils/cookie";
+import { mutate } from "swr";
 
 export default function invite() {
   const { user, isLoading } = useMe();
@@ -47,6 +48,8 @@ export default function invite() {
           await axios(`/api/v1/users/${user.googleId}/friends/${code}`, {
             method: "PATCH",
           });
+          mutate(`/api/v1/users/${user.id}`);
+          mutate(`/api/v1/users/${user.id}/videos`);
           toast.success("Ami ajouté");
         } catch (error) {
           toast.error("Votre amis n'a pas pu être ajouté");
