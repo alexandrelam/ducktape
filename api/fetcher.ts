@@ -1,11 +1,6 @@
-import { getCookie } from "../utils/cookie";
+import axios from "./privateAxios";
 
 export const fetcher = async (url: string) => {
-  const res = await fetch(`${process.env.API_URL}${url}`, {
-    headers: {
-      Authorization: `Bearer ${getCookie("token")}`,
-    },
-  });
-
-  return res.json();
+  const response = await axios.get(url);
+  return response.data;
 };

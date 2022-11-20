@@ -15,6 +15,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import { useMe } from "../api/useMe";
 import { getCookie } from "../utils/cookie";
 import { mutate } from "swr";
+import axios from "../api/privateAxios";
 
 export function Camera() {
   const { setPage } = useStore();
@@ -59,12 +60,9 @@ export function Camera() {
     formData.append("video", new Blob(recordedChunks, { type: "video/webm" }));
     formData.append("isFrontCamera", isFrontCamera.toString());
 
-    await fetch(`${process.env.API_URL}/api/v1/users/${user.id}/videos`, {
+    await axios(`/api/v1/users/${user.id}/videos`, {
       method: "POST",
-      headers: {
-        Authorization: `Bearer ${getCookie("token")}`,
-      },
-      body: formData,
+      data: formData,
     });
 
     mutate(`/api/v1/users/${user.id}/videos`);

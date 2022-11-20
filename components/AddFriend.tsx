@@ -7,6 +7,7 @@ import { toast } from "react-toastify";
 import { useMe } from "../api/useMe";
 import { mutate } from "swr";
 import { getCookie } from "../utils/cookie";
+import axios from "../api/privateAxios";
 
 export function AddFriend() {
   const [friendId, setFriendId] = useState<string>("");
@@ -17,15 +18,10 @@ export function AddFriend() {
 
   async function handleAddFriend() {
     try {
-      await fetch(
-        `${process.env.API_URL}/api/v1/users/${user.id}/friends/${friendId}`,
-        {
-          method: "PATCH",
-          headers: {
-            Authorization: `Bearer ${getCookie("token")}`,
-          },
-        }
-      );
+      await axios({
+        method: "PATCH",
+        url: `/api/v1/users/${user.id}/friends/${friendId}`,
+      });
       mutate("/api/v1/users/" + user.id);
       notifySuccess();
     } catch (error) {

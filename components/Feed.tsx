@@ -8,18 +8,12 @@ import { useMe } from "../api/useMe";
 import { FeedLoading } from "./FeedLoading";
 import { User } from "../types/User";
 import { mutate } from "swr";
-import { getCookie } from "../utils/cookie";
+import axios from "../api/privateAxios";
 
 async function deleteVideo(user: User, video: VideoType) {
-  await fetch(
-    `${process.env.API_URL}/api/v1/users/${user.id}/videos/${video.id}`,
-    {
-      method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${getCookie("token")}`,
-      },
-    }
-  );
+  await axios(`/api/v1/users/${user.id}/videos/${video.id}`, {
+    method: "DELETE",
+  });
   mutate(`/api/v1/users/${user.id}/videos`);
 }
 

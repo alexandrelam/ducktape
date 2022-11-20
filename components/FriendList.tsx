@@ -7,25 +7,17 @@ import Avatar from "@mui/material/Avatar";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useMe } from "../api/useMe";
 import { User } from "../types/User";
-import { getCookie } from "../utils/cookie";
 import { mutate } from "swr";
+import axios from "../api/privateAxios";
 
 export function FriendList() {
   const { user, isLoading } = useMe();
 
   async function removeFriend(friend: User) {
-    const response = await fetch(
-      `${process.env.API_URL}/api/v1/users/${user.id}/friends/${friend.id}`,
-      {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${getCookie("token")}`,
-        },
-      }
-    );
-    const data = await response.json();
+    await axios(`/api/v1/users/${user.id}/friends/${friend.id}`, {
+      method: "DELETE",
+    });
     mutate("/api/v1/users/" + user.id);
-    return data;
   }
 
   if (!user || isLoading) return null;
