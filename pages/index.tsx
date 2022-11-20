@@ -37,9 +37,12 @@ export default function Home() {
 
   if (!user || isLoading) {
     return (
-      <LoadingWrapper>
-        <CircularProgress />
-      </LoadingWrapper>
+      <>
+        <span>{process.env.API_URL}</span>
+        <LoadingWrapper>
+          <CircularProgress />
+        </LoadingWrapper>
+      </>
     );
   }
 
