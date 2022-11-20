@@ -1,13 +1,10 @@
 import Button from "@mui/material/Button";
 import styled from "@emotion/styled";
 import { useRouter } from "next/router";
-import { useAuthState } from "react-firebase-hooks/auth";
 import { UserUid } from "./UserUid";
 import { AddFriend } from "./AddFriend";
 import { FriendList } from "./FriendList";
-import { useEffect, useState } from "react";
-import { User } from "../types/User";
-import { doc, getDoc } from "firebase/firestore";
+import { useState } from "react";
 import RenameModal from "./RenameModal";
 import { useMe } from "../api/useMe";
 
@@ -24,8 +21,7 @@ export function Settings() {
     await navigator.share({
       title: "Invitez vos amis sur Ducktape",
       text: "Envoyez ce lien à vos amis pour les inviter sur Ducktape",
-      url:
-        "https://alexandrelam.github.io/ducktape/invite?code=" + user.googleId,
+      url: `${process.env.FRONT_URL}/invite?code=${user.googleId}`,
     });
   }
 

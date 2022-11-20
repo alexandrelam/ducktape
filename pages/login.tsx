@@ -6,7 +6,6 @@ import { useRouter } from "next/router";
 import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useMe } from "../api/useMe";
-import { mutate } from "swr";
 
 export default function login() {
   const router = useRouter();

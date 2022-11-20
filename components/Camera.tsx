@@ -13,7 +13,6 @@ import { CountdownButton } from "./CountdownButton";
 import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useMe } from "../api/useMe";
-import { getCookie } from "../utils/cookie";
 import { mutate } from "swr";
 import axios from "../api/privateAxios";
 
