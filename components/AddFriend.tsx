@@ -22,6 +22,7 @@ export function AddFriend() {
         url: `/api/v1/users/${user.googleId}/friends/${friendGoogleId}`,
       });
       mutate("/api/v1/users/" + user.id);
+      mutate(`/api/v1/users/${user.id}/videos`);
       notifySuccess();
     } catch (error) {
       notifyError();
@@ -38,6 +39,7 @@ export function AddFriend() {
         variant="outlined"
         value={friendGoogleId}
         onChange={(e) => setFriendGoogleId(e.target.value)}
+        autoComplete="off"
       />
       <Button variant="contained" onClick={handleAddFriend}>
         <PersonAddIcon />

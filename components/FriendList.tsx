@@ -18,6 +18,7 @@ export function FriendList() {
       method: "DELETE",
     });
     mutate("/api/v1/users/" + user.id);
+    mutate(`/api/v1/users/${user.id}/videos`);
   }
 
   if (!user || isLoading) return null;
