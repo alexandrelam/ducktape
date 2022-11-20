@@ -5,7 +5,6 @@ import { createContext, useState } from "react";
 import { AppLayout } from "../layouts/AppLayout";
 import "../styles/globals.css";
 import "react-toastify/dist/ReactToastify.css";
-import { Video } from "../types/Video";
 
 type ContextProps = {
   page: number;
