@@ -9,11 +9,11 @@ import { useEffect, useState } from "react";
 import { User } from "../types/User";
 import { doc, getDoc } from "firebase/firestore";
 import RenameModal from "./RenameModal";
+import { useMe } from "../api/useMe";
 
 export function Settings() {
   const router = useRouter();
-  const [userName, setUserName] = useState("loading...");
-  const [friends, setFriends] = useState<User[]>([]);
+  const { user, isLoading } = useMe();
   const [renameModalOpen, setRenameModalOpen] = useState(false);
 
   function handleLogout() {
@@ -28,19 +28,21 @@ export function Settings() {
     // });
   }
 
+  if (!user || isLoading) return null;
+
   return (
     <Container>
-      {/* <ProfileWrapper>
-        {user.photoURL ? (
-          <ProfilePicture src={user.photoURL} alt="profile picture" />
+      <ProfileWrapper>
+        {user.profilePicturePath ? (
+          <ProfilePicture src={user.profilePicturePath} alt="profile picture" />
         ) : null}
-        <span>{userName}</span>
+        <span>{user.name}</span>
       </ProfileWrapper>
       <UserUid />
       <Button onClick={shareAddFriend}>Envoyer un lien d'invitation</Button>
       <h2>Amis</h2>
-      <AddFriend fetchFriends={fetchFriends} />
-      <FriendList friends={friends} fetchFriends={fetchFriends} />
+      <AddFriend />
+      <FriendList />
       <ButtonWrapper>
         <Button variant="outlined" onClick={() => setRenameModalOpen(true)}>
           Changer de nom
@@ -52,7 +54,7 @@ export function Settings() {
       <RenameModal
         open={renameModalOpen}
         handleClose={() => setRenameModalOpen(false)}
-      /> */}
+      />
     </Container>
   );
 }

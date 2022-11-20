@@ -4,22 +4,37 @@ import ListItemText from "@mui/material/ListItemText";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
 import IconButton from "@mui/material/IconButton";
 import Avatar from "@mui/material/Avatar";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { arrayRemove, doc, updateDoc } from "firebase/firestore";
-import { User } from "../types/User";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { useMe } from "../api/useMe";
+import { User } from "../types/User";
+import { getCookie } from "../utils/cookie";
+import { mutate } from "swr";
 
-type Props = {
-  friends: User[];
-  fetchFriends: () => Promise<void>;
-};
+export function FriendList() {
+  const { user, isLoading } = useMe();
 
-export function FriendList({ friends, fetchFriends }: Props) {
+  async function removeFriend(friend: User) {
+    const response = await fetch(
+      `${process.env.API_URL}/api/v1/users/${user.id}/friends/${friend.id}`,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${getCookie("token")}`,
+        },
+      }
+    );
+    const data = await response.json();
+    mutate("/api/v1/users/" + user.id);
+    return data;
+  }
+
+  if (!user || isLoading) return null;
+
   return (
     <List sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}>
-      {/* {friends.map((friend) => (
+      {user.friends.map((friend) => (
         <ListItem
-          key={friend.uid}
+          key={friend.id}
           secondaryAction={
             <IconButton
               edge="end"
@@ -33,12 +48,12 @@ export function FriendList({ friends, fetchFriends }: Props) {
           <ListItemAvatar>
             <Avatar
               alt={`profile picture of ${friend.name}`}
-              src={friend.photoURL}
+              src={friend.profilePicturePath}
             />
           </ListItemAvatar>
-          <ListItemText primary={friend.name} secondary={friend.uid} />
+          <ListItemText primary={friend.name} secondary={friend.id} />
         </ListItem>
-      ))} */}
+      ))}
     </List>
   );
 }
