@@ -8,8 +8,12 @@ import CircularProgress from "@mui/material/CircularProgress";
 import { ToastContainer } from "react-toastify";
 import { useStore } from "../hooks/useStore";
 import { useMe } from "../api/useMe";
+import { getCookie } from "../utils/cookie";
+import { useEffect } from "react";
+import { useRouter } from "next/router";
 
 export default function Home() {
+  const router = useRouter();
   const { user, isLoading } = useMe();
 
   const { page, setPage } = useStore();
@@ -18,6 +22,12 @@ export default function Home() {
     height: "calc(var(--doc-height) - 56px)",
     WebkitOverflowScrolling: "touch", // iOS momentum scrolling
   };
+
+  useEffect(() => {
+    if (!getCookie("token")) {
+      router.push("/login");
+    }
+  }, []);
 
   if (!user || isLoading) {
     return (
