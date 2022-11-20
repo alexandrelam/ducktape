@@ -9,6 +9,8 @@ import { FeedLoading } from "./FeedLoading";
 import { User } from "../types/User";
 import { mutate } from "swr";
 import axios from "../api/privateAxios";
+import { EmptyFeed } from "./EmptyFeed";
+import { useStore } from "../hooks/useStore";
 
 async function deleteVideo(user: User, video: VideoType) {
   await axios(`/api/v1/users/${user.id}/videos/${video.id}`, {
@@ -25,10 +27,11 @@ function dateToTime(date: Date) {
 }
 
 export function Feed() {
-  const { user } = useMe();
+  const { setPage } = useStore();
+  const { user, isLoading: isUserLoading } = useMe();
   const { feed, isLoading } = useFeed();
 
-  if (isLoading || !feed) {
+  if (isLoading || isUserLoading || !feed) {
     return <FeedLoading />;
   }
 
@@ -37,6 +40,10 @@ export function Feed() {
     const bDate = new Date(b.lastModifiedDate);
     return bDate.getTime() - aDate.getTime();
   });
+
+  if (sortedFeed.length === 0) {
+    return <EmptyFeed setPage={setPage} />;
+  }
 
   return (
     <FeedContainer>
