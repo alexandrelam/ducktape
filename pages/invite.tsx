@@ -44,7 +44,9 @@ export default function invite() {
     (async () => {
       if (code) {
         try {
-          await axios(`/api/v1/users/${user.googleId}/friends/${code}`);
+          await axios(`/api/v1/users/${user.googleId}/friends/${code}`, {
+            method: "PATCH",
+          });
           toast.success("Ami ajouté");
         } catch (error) {
           toast.error("Votre amis n'a pas pu être ajouté");
