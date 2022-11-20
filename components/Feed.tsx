@@ -1,13 +1,23 @@
 import styled from "@emotion/styled";
 import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { deleteVideo } from "../firebase/videos";
+import { Video as VideoType } from "../types/Video";
+import { Video } from "./Video";
+import { useFeed } from "../api/useFeed";
+import { useMe } from "../api/useMe";
+import { FeedLoading } from "./FeedLoading";
+import { User } from "../types/User";
+import { mutate } from "swr";
+import axios from "../api/privateAxios";
 import { EmptyFeed } from "./EmptyFeed";
 import { useStore } from "../hooks/useStore";
-import { Video as VideoType } from "../types/Video";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { auth } from "../firebase/config";
-import { Video } from "./Video";
+
+async function deleteVideo(user: User, video: VideoType) {
+  await axios(`/api/v1/users/${user.id}/videos/${video.id}`, {
+    method: "DELETE",
+  });
+  mutate(`/api/v1/users/${user.id}/videos`);
+}
 
 function dateToTime(date: Date) {
   return date.toLocaleTimeString("fr-FR", {
@@ -17,39 +27,49 @@ function dateToTime(date: Date) {
 }
 
 export function Feed() {
-  const [user] = useAuthState(auth);
-  const { videos, setVideos, setPage } = useStore();
-  if (videos.length === 0) {
-    return <EmptyFeed setPage={setPage} />;
+  const { setPage } = useStore();
+  const { user, isLoading: isUserLoading } = useMe();
+  const { feed, isLoading } = useFeed();
+
+  if (isLoading || isUserLoading || !feed) {
+    return <FeedLoading />;
   }
 
-  const sortedVideos = videos.sort((a: VideoType, b: VideoType) => {
-    const aDate = new Date(a.createdAt);
-    const bDate = new Date(b.createdAt);
+  const sortedFeed = feed.sort((a: VideoType, b: VideoType) => {
+    const aDate = new Date(a.lastModifiedDate);
+    const bDate = new Date(b.lastModifiedDate);
     return bDate.getTime() - aDate.getTime();
   });
 
+  if (sortedFeed.length === 0) {
+    return <EmptyFeed setPage={setPage} />;
+  }
+
   return (
     <FeedContainer>
-      {sortedVideos.map((video) => (
-        <Overlay key={video.url}>
+      {sortedFeed.map((video) => (
+        <Overlay key={video.id}>
           <OverlayTextWrapper>
-            <OverlayText>{video.author}</OverlayText>
-            <OverlayText>{dateToTime(new Date(video.createdAt))}</OverlayText>
+            <OverlayText>{user.name}</OverlayText>
+            <OverlayText>
+              {dateToTime(new Date(video.lastModifiedDate))}
+            </OverlayText>
           </OverlayTextWrapper>
-          {user!.uid === video.authorUid ? (
+          {user.id == video.userId ? (
             <StyledIconButton
               aria-label="delete"
               size="large"
-              onClick={() => {
-                setVideos(videos.filter((v) => v.url !== video.url));
-                deleteVideo(user!, videos, video);
+              onClick={async () => {
+                await deleteVideo(user, video);
               }}
             >
               <DeleteIcon />
             </StyledIconButton>
           ) : null}
-          <Video videoUrl={video.url} isFrontCamera={video.isFrontCamera} />
+          <Video
+            videoUrl={`${process.env.API_URL}/${video.newFilename}`}
+            isFrontCamera={video.isFrontCamera}
+          />
         </Overlay>
       ))}
     </FeedContainer>

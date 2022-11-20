@@ -1,21 +1,20 @@
 import { useEffect } from "react";
 import styled from "@emotion/styled";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { auth } from "../firebase/config";
-import { addFriend } from "../firebase/friends";
 import { useRouter } from "next/router";
 import { useStore } from "../hooks/useStore";
 import { toast } from "react-toastify";
 import CircularProgress from "@mui/material/CircularProgress";
+import { useMe } from "../api/useMe";
+import axios from "../api/privateAxios";
+import { getCookie } from "../utils/cookie";
+import { mutate } from "swr";
 
 export default function invite() {
-  const [user, loading] = useAuthState(auth);
+  const { user, isLoading } = useMe();
   const router = useRouter();
   const { setPage } = useStore();
 
   useEffect(() => {
-    if (loading) return;
-
     const urlParams = new URLSearchParams(window.location.search);
     const code = urlParams.get("code");
 
@@ -25,7 +24,18 @@ export default function invite() {
       return;
     }
 
+    if (!getCookie("token")) {
+      localStorage.setItem("inviteCode", code);
+      const redirectLink = "/login?redirect=/invite" + "&code=" + code;
+      router.push(redirectLink);
+
+      return;
+    }
+
+    if (isLoading) return;
+
     if (!user) {
+      localStorage.setItem("inviteCode", code);
       const redirectLink = "/login?redirect=/invite" + "&code=" + code;
       router.push(redirectLink);
 
@@ -35,8 +45,12 @@ export default function invite() {
     (async () => {
       if (code) {
         try {
-          await addFriend(user.uid, code);
-          await addFriend(code, user.uid);
+          await axios(`/api/v1/users/${user.googleId}/friends/${code}`, {
+            method: "PATCH",
+          });
+          mutate(`/api/v1/users/${user.id}`);
+          mutate(`/api/v1/users/${user.id}/videos`);
+          toast.success("Ami ajouté");
         } catch (error) {
           toast.error("Votre amis n'a pas pu être ajouté");
         }
@@ -44,7 +58,7 @@ export default function invite() {
         router.push("/");
       }
     })();
-  }, [user, loading]);
+  }, [user, isLoading]);
 
   return (
     <Container>

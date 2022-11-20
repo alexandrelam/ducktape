@@ -8,24 +8,24 @@ import FlipCameraAndroidIcon from "@mui/icons-material/FlipCameraAndroid";
 import CancelIcon from "@mui/icons-material/Cancel";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
 import { useCamera } from "../hooks/useCamera";
-import { fetchFeed } from "../firebase/videos";
 import { useStore } from "../hooks/useStore";
 import { CountdownButton } from "./CountdownButton";
 import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { auth } from "../firebase/config";
+import { useMe } from "../api/useMe";
+import { mutate } from "swr";
+import axios from "../api/privateAxios";
 
 export function Camera() {
-  const { setVideos, setVideoLoading, setPage } = useStore();
-  const [user] = useAuthState(auth);
+  const { setPage } = useStore();
+  const { user } = useMe();
 
   const {
     webcamRef,
     capturing,
     recordedChunks,
+    setRecordedChunks,
     handleStartCaptureClick,
-    handleFirebaseUpload,
     handleCancel,
   } = useCamera();
 
@@ -53,13 +53,21 @@ export function Camera() {
   }
 
   async function handleUpload() {
-    setVideoLoading(true);
     setBackdropLoadingOpen(true);
-    await handleFirebaseUpload(isFrontCamera);
+
+    const formData = new FormData();
+    formData.append("video", new Blob(recordedChunks, { type: "video/webm" }));
+    formData.append("isFrontCamera", isFrontCamera.toString());
+
+    await axios(`/api/v1/users/${user.id}/videos`, {
+      method: "POST",
+      data: formData,
+    });
+
+    mutate(`/api/v1/users/${user.id}/videos`);
+
+    setRecordedChunks([]);
     setBackdropLoadingOpen(false);
-    const v = await fetchFeed(user!);
-    setVideos(v);
-    setVideoLoading(false);
     setPage(1);
   }
 

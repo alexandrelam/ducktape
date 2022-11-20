@@ -1,25 +1,22 @@
 import styled from "@emotion/styled";
 import { Navbar } from "../components/Navbar";
-import { useEffect } from "react";
 import { Feed } from "../components/Feed";
 import { Settings } from "../components/Settings";
 import { Camera } from "../components/Camera";
 import SwipeableViews from "react-swipeable-views";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { auth } from "../firebase/config";
-import { fetchFeed } from "../firebase/videos";
 import CircularProgress from "@mui/material/CircularProgress";
-import { FeedLoading } from "../components/FeedLoading";
-import { useRouter } from "next/router";
 import { ToastContainer } from "react-toastify";
 import { useStore } from "../hooks/useStore";
+import { useMe } from "../api/useMe";
+import { getCookie } from "../utils/cookie";
+import { useEffect } from "react";
+import { useRouter } from "next/router";
 
 export default function Home() {
   const router = useRouter();
-  const [user, loading, error] = useAuthState(auth);
+  const { user, isLoading } = useMe();
 
-  const { page, setPage, setVideos, videoLoading, setVideoLoading } =
-    useStore();
+  const { page, setPage } = useStore();
 
   const swipeableStyles = {
     height: "calc(var(--doc-height) - 56px)",
@@ -27,23 +24,18 @@ export default function Home() {
   };
 
   useEffect(() => {
-    if (loading) return;
-    if (!user) {
+    if (!getCookie("token")) {
       router.push("/login");
-      return;
     }
-    (async () => {
-      const v = await fetchFeed(user!);
-      setVideos(v);
-      setVideoLoading(false);
-    })();
-  }, [user, loading]);
 
-  if (error) {
-    return <h1>Couldn't fetch user</h1>;
-  }
+    const invideCode = localStorage.getItem("inviteCode");
+    if (invideCode) {
+      localStorage.removeItem("inviteCode");
+      router.push("/invite?code=" + localStorage.getItem(invideCode));
+    }
+  }, []);
 
-  if (!user || loading) {
+  if (!user || isLoading) {
     return (
       <LoadingWrapper>
         <CircularProgress />
@@ -62,7 +54,7 @@ export default function Home() {
             containerStyle={swipeableStyles}
           >
             <Camera />
-            {videoLoading ? <FeedLoading /> : <Feed />}
+            <Feed />
             <Settings />
           </SwipeableViews>
         </Container>

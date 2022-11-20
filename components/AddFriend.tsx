@@ -2,37 +2,34 @@ import TextField from "@mui/material/TextField";
 import styled from "@emotion/styled";
 import Button from "@mui/material/Button";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
-import { useAuthState } from "react-firebase-hooks/auth";
 import { useState } from "react";
-import { auth } from "../firebase/config";
 import { toast } from "react-toastify";
-import { addFriend } from "../firebase/friends";
+import { useMe } from "../api/useMe";
+import { mutate } from "swr";
+import axios from "../api/privateAxios";
 
-type Props = {
-  fetchFriends: () => Promise<void>;
-};
-
-export function AddFriend({ fetchFriends }: Props) {
-  const [user] = useAuthState(auth);
-  const [friendUid, setFriendUid] = useState<string>("");
+export function AddFriend() {
+  const [friendGoogleId, setFriendGoogleId] = useState<string>("");
+  const { user, isLoading } = useMe();
 
   const notifySuccess = () => toast.success("Ami ajouté");
   const notifyError = () => toast.error("L'utilisateur n'existe pas");
 
   async function handleAddFriend() {
-    if (user) {
-      try {
-        if (friendUid === user.uid)
-          throw new Error("Vous ne pouvez pas vous ajouter vous-même");
-        await addFriend(user.uid, friendUid);
-        await addFriend(friendUid, user.uid);
-        fetchFriends();
-        notifySuccess();
-      } catch (e) {
-        notifyError();
-      }
+    try {
+      await axios({
+        method: "PATCH",
+        url: `/api/v1/users/${user.googleId}/friends/${friendGoogleId}`,
+      });
+      mutate("/api/v1/users/" + user.id);
+      mutate(`/api/v1/users/${user.id}/videos`);
+      notifySuccess();
+    } catch (error) {
+      notifyError();
     }
   }
+
+  if (!user || isLoading) return null;
 
   return (
     <Wrapper>
@@ -40,8 +37,9 @@ export function AddFriend({ fetchFriends }: Props) {
         id="outlined-basic"
         label="UID Utilisateur"
         variant="outlined"
-        value={friendUid}
-        onChange={(e) => setFriendUid(e.target.value)}
+        value={friendGoogleId}
+        onChange={(e) => setFriendGoogleId(e.target.value)}
+        autoComplete="off"
       />
       <Button variant="contained" onClick={handleAddFriend}>
         <PersonAddIcon />

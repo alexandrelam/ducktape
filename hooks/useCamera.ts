@@ -1,10 +1,5 @@
 import { useState, useRef, useCallback } from "react";
-import { getStorage, ref, uploadBytes } from "firebase/storage";
-import { doc, updateDoc, arrayUnion } from "firebase/firestore";
 import { wait2Second } from "../utils/wait";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { auth } from "../firebase/config";
-import { db } from "../firebase/config";
 import type Webcam from "react-webcam";
 
 export const useCamera = () => {
@@ -12,7 +7,6 @@ export const useCamera = () => {
   const mediaRecorderRef = useRef();
   const [capturing, setCapturing] = useState(false);
   const [recordedChunks, setRecordedChunks] = useState([]);
-  const [user] = useAuthState(auth);
 
   const handleStartCaptureClick = useCallback(async () => {
     if (!webcamRef.current) return;
@@ -47,38 +41,6 @@ export const useCamera = () => {
     [setRecordedChunks]
   );
 
-  const handleFirebaseUpload = useCallback(
-    async (isFrontCamera: boolean) => {
-      if (recordedChunks.length) {
-        const blob = new Blob(recordedChunks, {
-          type: "video/webm",
-        });
-
-        try {
-          const date = new Date().toISOString;
-          const title = `${date}.webm`;
-          const storage = getStorage();
-          const storageRef = ref(storage, title);
-
-          await updateDoc(doc(db, "users", user!.uid), {
-            videos: arrayUnion({
-              path: title,
-              isFrontCamera,
-              createdAt: date,
-            }),
-          });
-
-          // 'file' comes from the Blob or File API
-          await uploadBytes(storageRef, blob);
-          setRecordedChunks([]);
-        } catch (e) {
-          console.log(e);
-        }
-      }
-    },
-    [recordedChunks]
-  );
-
   const handleCancel = useCallback(() => {
     setRecordedChunks([]);
   }, [setRecordedChunks]);
@@ -87,8 +49,8 @@ export const useCamera = () => {
     webcamRef,
     capturing,
     recordedChunks,
+    setRecordedChunks,
     handleStartCaptureClick,
-    handleFirebaseUpload,
     handleCancel,
   };
 };

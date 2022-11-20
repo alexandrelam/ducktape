@@ -3,18 +3,17 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import styled from "@emotion/styled";
 import { useRouter } from "next/router";
-import { auth, signInWithGoogle } from "../firebase/config";
 import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
-import { useAuthState } from "react-firebase-hooks/auth";
+import { useMe } from "../api/useMe";
 
 export default function login() {
   const router = useRouter();
   const [open, setOpen] = useState(false);
-  const [user, loading] = useAuthState(auth);
+  const { user, isLoading } = useMe();
 
   useEffect(() => {
-    if (loading) return;
+    if (isLoading) return;
     if (!user) return;
     setOpen(false);
     const redirect = router.query.redirect as string;
@@ -23,13 +22,11 @@ export default function login() {
     if (code && redirect) {
       router.push(`${redirect}?code=${code}`);
     }
-
-    router.push("/");
-  }, [user, loading]);
+  }, [user, isLoading]);
 
   async function handleLogin() {
     setOpen(true);
-    await signInWithGoogle();
+    window.location.replace(`${process.env.API_URL}/api/v1/auth/google`);
   }
 
   return (

@@ -4,41 +4,30 @@ import ListItemText from "@mui/material/ListItemText";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
 import IconButton from "@mui/material/IconButton";
 import Avatar from "@mui/material/Avatar";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { auth, db } from "../firebase/config";
-import { arrayRemove, doc, updateDoc } from "firebase/firestore";
-import { User } from "../types/User";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { useMe } from "../api/useMe";
+import { User } from "../types/User";
+import { mutate } from "swr";
+import axios from "../api/privateAxios";
 
-type Props = {
-  friends: User[];
-  fetchFriends: () => Promise<void>;
-};
-
-export function FriendList({ friends, fetchFriends }: Props) {
-  const [user] = useAuthState(auth);
+export function FriendList() {
+  const { user, isLoading } = useMe();
 
   async function removeFriend(friend: User) {
-    await updateDoc(doc(db, "users", user!.uid), {
-      friends: arrayRemove(friend),
+    await axios(`/api/v1/users/${user.id}/friends/${friend.id}`, {
+      method: "DELETE",
     });
-
-    await updateDoc(doc(db, "users", friend.uid), {
-      friends: arrayRemove({
-        uid: user!.uid,
-        name: user!.displayName,
-        photoURL: user!.photoURL,
-      }),
-    });
-
-    fetchFriends();
+    mutate("/api/v1/users/" + user.id);
+    mutate(`/api/v1/users/${user.id}/videos`);
   }
+
+  if (!user || isLoading) return null;
 
   return (
     <List sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}>
-      {friends.map((friend) => (
+      {user.friends.map((friend) => (
         <ListItem
-          key={friend.uid}
+          key={friend.id}
           secondaryAction={
             <IconButton
               edge="end"
@@ -52,10 +41,10 @@ export function FriendList({ friends, fetchFriends }: Props) {
           <ListItemAvatar>
             <Avatar
               alt={`profile picture of ${friend.name}`}
-              src={friend.photoURL}
+              src={friend.profilePicturePath}
             />
           </ListItemAvatar>
-          <ListItemText primary={friend.name} secondary={friend.uid} />
+          <ListItemText primary={friend.name} secondary={friend.googleId} />
         </ListItem>
       ))}
     </List>
