@@ -58,7 +58,7 @@ export default function Invite() {
         router.push("/");
       }
     })();
-  }, [user, isLoading]);
+  }, [user, isLoading, router, setPage]);
 
   return (
     <Container>

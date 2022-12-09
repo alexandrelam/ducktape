@@ -22,7 +22,7 @@ export default function Login() {
     if (code && redirect) {
       router.push(`${redirect}?code=${code}`);
     }
-  }, [user, isLoading]);
+  }, [user, isLoading, router]);
 
   async function handleLogin() {
     setOpen(true);
