@@ -1,38 +1,16 @@
 {
-  "name": "flashduck",
+  "name": "ducktape",
   "version": "0.1.0",
   "private": true,
   "author": {
     "name": "Alexandre Lam",
     "email": "alexandrelam@outlook.com"
   },
-  "scripts": {
-    "dev": "next dev",
-    "build": "next build && next export && touch ./out/.nojekyll && echo 'https://alexandrelam.github.io/ducktape/' > ./out/CNAME",
-    "start": "next start",
-    "lint": "next lint"
-  },
   "dependencies": {
-    "@emotion/react": "^11.10.5",
-    "@emotion/styled": "^11.10.5",
-    "@mui/icons-material": "^5.10.9",
-    "@mui/material": "^5.10.12",
-    "@types/node": "18.11.9",
-    "@types/react": "18.0.24",
-    "@types/react-dom": "18.0.8",
-    "axios": "^1.1.3",
-    "next": "13.0.1",
-    "next-pwa": "^5.6.0",
-    "react": "18.2.0",
-    "react-dom": "18.2.0",
-    "react-swipeable-views": "^0.14.0",
-    "react-toastify": "^9.1.1",
-    "react-webcam": "^7.0.1",
-    "swr": "^1.3.0",
     "typescript": "4.8.4"
   },
   "devDependencies": {
-    "@types/react-swipeable-views": "^0.13.1"
+    "@types/node": "18.11.9"
   }
 }
 
