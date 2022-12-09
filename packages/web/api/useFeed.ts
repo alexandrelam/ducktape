@@ -1,5 +1,5 @@
 import useSWR from "swr";
-import { Video } from "../types/Video";
+import { Video } from "models/Video";
 import { fetcher } from "./fetcher";
 import { useGuard } from "./useGuard";
 

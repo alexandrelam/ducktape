@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { User } from "../types/User";
+import { User } from "models/User";
 import { decryptJwt, getCookie } from "../utils/cookie";
 
 export function useGuard() {

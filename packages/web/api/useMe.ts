@@ -1,5 +1,5 @@
 import useSWR from "swr";
-import { User } from "../types/User";
+import { User } from "models/User";
 import { fetcher } from "./fetcher";
 import { useGuard } from "./useGuard";
 
