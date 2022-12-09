@@ -1,4 +1,4 @@
-import { Video } from "./Video";
+import { Video } from "models/Video";
 
 export type User = {
   id: number;

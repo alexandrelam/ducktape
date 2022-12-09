@@ -1,12 +1,12 @@
 import styled from "@emotion/styled";
 import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { Video as VideoType } from "../types/Video";
+import { Video as VideoType } from "models/Video";
 import { Video } from "./Video";
 import { useFeed } from "../api/useFeed";
 import { useMe } from "../api/useMe";
 import { FeedLoading } from "./FeedLoading";
-import { User } from "../types/User";
+import { User } from "models/User";
 import { mutate } from "swr";
 import axios from "../api/privateAxios";
 import { EmptyFeed } from "./EmptyFeed";
@@ -55,7 +55,7 @@ export function Feed() {
               {dateToTime(new Date(video.lastModifiedDate))}
             </OverlayText>
           </OverlayTextWrapper>
-          {user.id == video.userId ? (
+          {user.id == video.user.id ? (
             <StyledIconButton
               aria-label="delete"
               size="large"

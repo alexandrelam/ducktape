@@ -6,7 +6,7 @@ import IconButton from "@mui/material/IconButton";
 import Avatar from "@mui/material/Avatar";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useMe } from "../api/useMe";
-import { User } from "../types/User";
+import { User } from "models/User";
 import { mutate } from "swr";
 import axios from "../api/privateAxios";
 
