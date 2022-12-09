@@ -9,7 +9,7 @@ import axios from "../api/privateAxios";
 import { getCookie } from "../utils/cookie";
 import { mutate } from "swr";
 
-export default function invite() {
+export default function Invite() {
   const { user, isLoading } = useMe();
   const router = useRouter();
   const { setPage } = useStore();

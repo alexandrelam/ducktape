@@ -33,7 +33,7 @@ export default function Home() {
       localStorage.removeItem("inviteCode");
       router.push("/invite?code=" + localStorage.getItem(invideCode));
     }
-  }, []);
+  }, [router]);
 
   if (!user || isLoading) {
     return (

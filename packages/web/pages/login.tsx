@@ -7,7 +7,7 @@ import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useMe } from "../api/useMe";
 
-export default function login() {
+export default function Login() {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const { user, isLoading } = useMe();

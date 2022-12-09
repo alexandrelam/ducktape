@@ -1,6 +1,8 @@
 {
   "compilerOptions": {
     "target": "es5",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
@@ -11,6 +13,7 @@
     "module": "esnext",
     "moduleResolution": "node",
     "resolveJsonModule": true,
+    "strictPropertyInitialization": false,
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true
@@ -18,3 +21,4 @@
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
   "exclude": ["node_modules"]
 }
+

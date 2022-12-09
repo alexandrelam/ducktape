@@ -36,7 +36,9 @@ export function Settings() {
         <span>{user.name}</span>
       </ProfileWrapper>
       <UserUid />
-      <Button onClick={shareAddFriend}>Envoyer un lien d'invitation</Button>
+      <Button onClick={shareAddFriend}>
+        Envoyer un lien d&apos;invitation
+      </Button>
       <h2>Amis</h2>
       <AddFriend />
       <FriendList />
