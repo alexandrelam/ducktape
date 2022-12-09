@@ -6,6 +6,10 @@
     "name": "Alexandre Lam",
     "email": "alexandrelam@outlook.com"
   },
+  "scripts": {
+    "dev:front": "cd packages/web && pnpm dev",
+    "dev:back": "cd packages/api && pnpm start"
+  },
   "dependencies": {
     "typescript": "4.8.4",
     "class-validator": "^0.13.2",
