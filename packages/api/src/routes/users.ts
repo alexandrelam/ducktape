@@ -15,13 +15,22 @@ export class UserRouter {
 
   routes() {
     this.router.get("/", this.userController.findAll);
-    this.router.get("/:id", this.userController.getById);
     this.router.post("/", this.userController.create);
-    this.router.post("/addFriend", this.userController.addFriend);
-    this.router.post("/uploadVideo", this.userController.uploadVideo);
-    this.router.get("/:id/videos", this.userController.findAllVideos);
-    this.router.delete("/deleteFriend", this.userController.deleteFriend);
-    this.router.delete("/deleteVideo", this.userController.deleteVideo);
-    this.router.put("/rename", this.userController.rename);
+    this.router.get("/:userId", this.userController.getById);
+    this.router.patch("/:userId", this.userController.rename);
+    this.router.get("/:userId/videos", this.userController.findAllVideos);
+    this.router.patch(
+      "/:userGoogleId/friends/:friendGoogleId",
+      this.userController.addFriend
+    );
+    this.router.post("/:userId/videos", this.userController.uploadVideo);
+    this.router.delete(
+      "/:userId/friends/:friendId",
+      this.userController.deleteFriend
+    );
+    this.router.delete(
+      "/:userId/videos/:videoId",
+      this.userController.deleteVideo
+    );
   }
 }

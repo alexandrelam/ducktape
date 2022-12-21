@@ -55,7 +55,8 @@ export function Feed() {
               {dateToTime(new Date(video.lastModifiedDate))}
             </OverlayText>
           </OverlayTextWrapper>
-          {user.id == video.user.id ? (
+          {/**@ts-ignore */}
+          {user.id == video.userId ? (
             <StyledIconButton
               aria-label="delete"
               size="large"

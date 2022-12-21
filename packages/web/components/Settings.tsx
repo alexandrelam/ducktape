@@ -13,7 +13,8 @@ export function Settings() {
   const { user, isLoading } = useMe();
   const [renameModalOpen, setRenameModalOpen] = useState(false);
 
-  function handleLogout() {
+  async function handleLogout() {
+    document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
     router.push("/login");
   }
 

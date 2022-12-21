@@ -33,23 +33,14 @@ export class AuthRouter {
           }),
           {
             httpOnly: false,
-            secure: true,
-            sameSite: "none",
-            expires: new Date(Date.now() + 600000),
-            domain: ".loca.lt",
           }
         );
       }
     );
 
-    this.router.get("/logout", (ctx: Koa.Context) => {
-      ctx.cookies.set("token", "", {
-        httpOnly: false,
-        secure: true,
-        sameSite: "none",
-        expires: new Date(Date.now() - 600000),
-        domain: ".loca.lt",
-      });
+    this.router.post("/logout", (ctx: Koa.Context) => {
+      console.log("logout");
+      ctx.cookies.set("token", "", { httpOnly: false });
       ctx.redirect(process.env.FRONT_URL as string);
     });
   }
