@@ -33,13 +33,14 @@ export class AuthRouter {
           }),
           {
             httpOnly: false,
+            sameSite: "none",
+            secure: true,
           }
         );
       }
     );
 
     this.router.post("/logout", (ctx: Koa.Context) => {
-      console.log("logout");
       ctx.cookies.set("token", "", { httpOnly: false });
       ctx.redirect(process.env.FRONT_URL as string);
     });

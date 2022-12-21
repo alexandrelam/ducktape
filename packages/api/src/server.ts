@@ -24,7 +24,7 @@ dotenv.config();
 
   app.use(
     cors({
-      origin: "*",
+      origin: process.env.FRONT_URL as string,
       credentials: true,
     })
   );
@@ -44,7 +44,6 @@ dotenv.config();
     jwt({
       secret: process.env.JWT_SECRET as string,
       debug: true,
-      cookie: "token",
     })
   );
 
