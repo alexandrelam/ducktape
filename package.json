@@ -7,7 +7,9 @@
     "email": "alexandrelam@outlook.com"
   },
   "scripts": {
+    "start:front": "cd packages/web && pnpm start",
     "dev:front": "cd packages/web && pnpm dev",
+    "build:front": "cd packages/web && pnpm build",
     "dev:back": "cd packages/api && pnpm start"
   },
   "dependencies": {
