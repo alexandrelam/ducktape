@@ -9,8 +9,6 @@ const withPWA = require("next-pwa")({
 const nextConfig = withPWA({
   reactStrictMode: true,
   swcMinify: true,
-  assetPrefix: process.env.NODE_ENV === "development" ? "" : "/ducktape/",
-  basePath: process.env.NODE_ENV === "development" ? "" : "/ducktape",
   env: {
     API_URL: process.env.API_URL,
   },

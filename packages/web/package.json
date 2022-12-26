@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "next dev -p 8197",
-    "build": "next build && next export && touch ./out/.nojekyll && echo 'https://alexandrelam.github.io/ducktape/' > ./out/CNAME",
+    "build": "next build",
     "start": "next start -p 8197",
     "lint": "next lint"
   },

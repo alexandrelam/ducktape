@@ -25,7 +25,7 @@ export function AppLayout({ children }: Props) {
         />
         <meta name="author" content="Alexandre Lam" />
         <meta name="keyword" content="🦆" />
-        <link rel="icon" href="/ducktape/favicon.ico" />
+        <link rel="icon" href="favicon.ico" />
       </Head>
       {children}
     </>

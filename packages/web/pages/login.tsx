@@ -32,7 +32,7 @@ export default function Login() {
   return (
     <Container>
       <Image
-        src="/ducktape/icon-384x384.png"
+        src="icon-384x384.png"
         alt="login illustration"
         width={200}
         height={200}
