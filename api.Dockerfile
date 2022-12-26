@@ -14,6 +14,6 @@ COPY ./packages/models ./packages/models
 
 RUN pnpm install
 
-EXPOSE 4000
+EXPOSE 8825 
 
 CMD ["pnpm", "dev:back"]

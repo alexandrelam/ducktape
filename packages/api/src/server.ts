@@ -49,8 +49,8 @@ dotenv.config();
 
   app.use(new UserRouter().router.routes());
 
-  app.listen(4000, () => {
-    console.log("Server started on port 4000");
+  app.listen(8825, () => {
+    console.log("Server started on port 8825");
   });
 })();
 
