@@ -25,7 +25,6 @@ export class AuthRouter {
         session: false,
       }),
       (ctx: Koa.Context) => {
-        ctx.redirect(process.env.FRONT_URL as string);
         ctx.cookies.set(
           "token",
           jwt.sign({ user: ctx.state.user }, process.env.JWT_SECRET as string, {
@@ -35,8 +34,11 @@ export class AuthRouter {
             httpOnly: false,
             sameSite: "none",
             secure: true,
+            domain: ".potionverte.lol",
+            expires: new Date(Date.now() + 600000),
           }
         );
+        ctx.redirect(process.env.FRONT_URL as string);
       }
     );
 
