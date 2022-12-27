@@ -10,5 +10,8 @@ services:
     build:
       context: .
       dockerfile: api.Dockerfile
+    volumes:
+      - ./packages/api/db.sqlite:/usr/src/app/packages/api/db.sqlite
+      - ./packages/api/uploads:/usr/src/app/packages/api/uploads
     ports:
       - "8825:8825"
