@@ -50,7 +50,8 @@ export function Feed() {
       {sortedFeed.map((video) => (
         <Overlay key={video.id}>
           <OverlayTextWrapper>
-            <OverlayText>{user.name}</OverlayText>
+            {/**@ts-ignore */}
+            <OverlayText>{video.author}</OverlayText>
             <OverlayText>
               {dateToTime(new Date(video.lastModifiedDate))}
             </OverlayText>

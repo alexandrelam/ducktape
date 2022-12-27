@@ -47,7 +47,11 @@ export class UserController {
       (acc, friend) => {
         if (friend.videos.length) {
           acc.push(
-            ...friend.videos.map((video) => ({ ...video, userId: friend.id }))
+            ...friend.videos.map((video) => ({
+              ...video,
+              userId: friend.id,
+              author: friend.name,
+            }))
           );
         }
         return acc;
@@ -55,7 +59,13 @@ export class UserController {
       []
     );
 
-    videos.push(...user[0].videos.map((video) => ({ ...video, userId })));
+    videos.push(
+      ...user[0].videos.map((video) => ({
+        ...video,
+        userId,
+        author: user[0].name,
+      }))
+    );
 
     ctx.body = videos;
   }
