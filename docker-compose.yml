@@ -1,17 +1,31 @@
 version: "3"
 services:
   frontend:
-    build:
-      context: .
-      dockerfile: front.Dockerfile
+    image: ghcr.io/alexandrelam/ducktape-front:main
+    container_name: ducktape-front
     ports:
       - "8197:8197"
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+
   backend:
-    build:
-      context: .
-      dockerfile: api.Dockerfile
+    image: ghcr.io/alexandrelam/ducktape-api:main
+    container_name: ducktape-api
     volumes:
       - ./packages/api/db.sqlite:/usr/src/app/packages/api/db.sqlite
       - ./packages/api/uploads:/usr/src/app/packages/api/uploads
     ports:
       - "8825:8825"
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+
+  watchtower:
+    image: containrrr/watchtower
+    container_name: watchtower
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: --cleanup --interval 600 ducktape-front ducktape-api

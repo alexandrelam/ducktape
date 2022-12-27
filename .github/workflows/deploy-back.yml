@@ -7,7 +7,7 @@
 # To get a newer version, you will need to update the SHA.
 # You can also reference a tag or branch, but the action may change without warning.
 
-name: Create and publish a Docker image
+name: Docker API Image CI
 
 on:
   push:
@@ -31,12 +31,12 @@ jobs:
       - name: Create .env file
         run: |
           cd packages/api
-          touch .env.local
-          echo FRONT_URL=${{ secrets.FRONT_URL }} >> .env.local
-          echo API_URL=${{ secrets.API_URL }} >> .env.local
-          echo GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }} >> .env.local
-          echo GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }} >> .env.local
-          echo JWT_SECRET=${{ secrets.JWT_SECRET }} >> .env.local
+          touch .env
+          echo FRONT_URL=${{ secrets.FRONT_URL }} >> .env
+          echo API_URL=${{ secrets.API_URL }} >> .env
+          echo GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }} >> .env
+          echo GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }} >> .env
+          echo JWT_SECRET=${{ secrets.JWT_SECRET }} >> .env
 
       - name: Log in to the Container registry
         uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
