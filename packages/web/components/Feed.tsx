@@ -50,13 +50,11 @@ export function Feed() {
       {sortedFeed.map((video) => (
         <Overlay key={video.id}>
           <OverlayTextWrapper>
-            {/**@ts-ignore */}
             <OverlayText>{video.author}</OverlayText>
             <OverlayText>
               {dateToTime(new Date(video.lastModifiedDate))}
             </OverlayText>
           </OverlayTextWrapper>
-          {/**@ts-ignore */}
           {user.id == video.userId ? (
             <StyledIconButton
               aria-label="delete"

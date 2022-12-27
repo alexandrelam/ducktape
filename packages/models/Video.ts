@@ -50,4 +50,8 @@ export class Video {
 
   @CreateDateColumn()
   createdAt: Date;
+
+  userId: number;
+
+  author: string;
 }
