@@ -30,6 +30,7 @@ export default function Home() {
 
     const invideCode = localStorage.getItem("inviteCode");
     if (invideCode) {
+      localStorage.removeItem("inviteCode");
       router.push("/invite?code=" + invideCode);
     }
   }, [router]);
